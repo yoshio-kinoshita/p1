@@ -27,8 +27,7 @@ public class LogParserImpl implements LogParser {
 		for (String logfile : logfiles) {
 			FileReadCallable log = new FileReadCallable(logfile,
 					new ArrayList<String>());
-//			Future<List<Object[]>> list = ex.submit(log);
-			Future<List<Object[]>> list = ex.submit(log);
+			ex.submit(log);
 			
 			try {
 			for(Object[] o : list.get()) {
