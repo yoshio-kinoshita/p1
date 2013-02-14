@@ -28,20 +28,20 @@ public class LogParserImpl implements LogParser {
 			FileReadCallable log = new FileReadCallable(logfile,
 					new ArrayList<String>());
 //			Future<List<Object[]>> list = ex.submit(log);
-			Future<List<Object[]>> list = ex.submit(log);
-			
-			try {
-			for(Object[] o : list.get()) {
-			String ip = (String)o[0];
-			String url = (String)o[1];
-			String date = (String )o[2];
-			File file = new File();
-				
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				e.printStackTrace();
-			}
+//			Future<List<Object[]>> list = ex.submit(log);
+//			
+//			try {
+////			for(Object[] o : list.get()) {
+////			String ip = (String)o[0];
+////			String url = (String)o[1];
+////			String date = (String )o[2];
+////			File file = new File();
+//				
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			} catch (ExecutionException e) {
+//				e.printStackTrace();
+//			}
 		}
 
 		return resultList;
@@ -56,8 +56,8 @@ public class LogParserImpl implements LogParser {
 					new File(logfile)))) {
 
 				String line = reader.readLine();
-				Date date = P1Util.parseTime(line);
-				list.add(new Object[] { date, logfile });
+//				Date date = P1Util.parseTime(line);
+//				list.add(new Object[] { date, logfile });
 
 			} catch (IOException e) {
 			}
