@@ -28,38 +28,10 @@ public class Main {
 		Map<String, Result> resultMap = logParser.parser(logfiles,
 				new ArrayList<String>());
 
-		Map<String, Integer> countMap = new HashMap<>();
-
-		for (Entry<String, Result> entries : resultMap.entrySet()) {
-			Result result = entries.getValue();
-			String ip = result.getIp();
-			Integer count = countMap.get(ip);
-			if (count == null) {
-				count = result.getCount();
-			} else {
-				count = count + result.getCount();
-				;
-			}
-			countMap.put(ip, count);
-		}
-
-		List<Entry<String, Integer>> countEntries = new ArrayList<>(
-				countMap.entrySet());
-		Collections.sort(countEntries, new Comparator<Object>() {
-			public int compare(Object obj1, Object obj2) {
-				Map.Entry<String, Integer> ent1 = (Map.Entry<String, Integer>) obj1;
-				Map.Entry<String, Integer> ent2 = (Map.Entry<String, Integer>) obj2;
-				Integer val1 = (Integer) ent1.getValue();
-				Integer val2 = (Integer) ent2.getValue();
-
-				int cnt = val1.compareTo(val2);
-				return -1 * cnt;
-			}
-		});
-
 		List<Entry<String, Result>> resultEntries = new ArrayList<>(
 				resultMap.entrySet());
 
+		// ip - cnt - urlでソート
 		Collections.sort(resultEntries, new Comparator<Object>() {
 			public int compare(Object obj1, Object obj2) {
 				Map.Entry<String, Result> ent1 = (Map.Entry<String, Result>) obj1;
@@ -67,30 +39,52 @@ public class Main {
 				Result val1 = (Result) ent1.getValue();
 				Result val2 = (Result) ent2.getValue();
 
+				int ip = val1.getIp().compareTo(val2.getIp());
 				int cnt = val1.getCount().compareTo(val2.getCount());
 
-				if (cnt != 0) {
+				if (ip != 0) {
+					return ip;
+				} else if (cnt != 0) {
 					return -1 * cnt;
 				} else {
-					return val1.getFirstAccessDate().compareTo(
-							val1.getFirstAccessDate());
+					return val1.getUrl().compareTo(val1.getUrl());
 				}
 			}
 		});
 
-		for (Entry<String, Integer> entry : countEntries) {
-			System.out.println("count:" + entry.getValue() + " ip:"
-					+ entry.getKey());
+		// ipアドレスごとにResult生成
+		Map<String, Result> countMap = new HashMap<>();
+		for (Entry<String, Result> entries : resultEntries) {
+			Result result = entries.getValue();
+			String ip = result.getIp();
+			Result countResult = countMap.get(ip);
+			if (countResult == null) {
+				countResult = result;
+			} else {
+				countResult
+						.setCount(countResult.getCount() + result.getCount());
+			}
+			countMap.put(ip, countResult);
 		}
-		
-		System.out.println("---------------");
-		
 
-		for (Entry<String, Result> entry : resultEntries) {
+		List<Entry<String, Result>> countEntries = new ArrayList<>(
+				countMap.entrySet());
+		Collections.sort(countEntries, new Comparator<Object>() {
+			public int compare(Object obj1, Object obj2) {
+				Map.Entry<String, Result> ent1 = (Map.Entry<String, Result>) obj1;
+				Map.Entry<String, Result> ent2 = (Map.Entry<String, Result>) obj2;
+				Integer val1 = (Integer) ent1.getValue().getCount();
+				Integer val2 = (Integer) ent2.getValue().getCount();
+
+				int cnt = val1.compareTo(val2);
+				return -1 * cnt;
+			}
+		});
+
+		for (Entry<String, Result> entry : countEntries) {
 			Result result = entry.getValue();
-			System.out.println("count:" + countMap.get(result.getIp()) + " ip:"
-					+ result.getIp() + " url:" + result.getUrl() + " access:"
-					+ result.getFirstAccessDate());
+			System.out.println(result.getIp() + "," + result.getCount() + ","
+					+ result.getFirstAccessDate() + "," + result.getUrl());
 		}
 
 		stopWatch.stop();
