@@ -7,13 +7,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import util.P1Util;
-import callable.LogAnalisysCallable;
 import callable.LogReader;
 import entity.AccessLog;
 
@@ -23,24 +18,9 @@ public class LogParserImpl implements LogParser {
 	public List<AccessLog> parser(List<String> logfiles, List<String> filters) {
 
 		logfiles = sortLogfiles(logfiles);
+		List<AccessLog> lines = LogReader.read(logfiles, filters);
 
-		ExecutorService ex = Executors.newFixedThreadPool(1);
-		List<Future<List<AccessLog>>> submitList = new ArrayList<>();
-		for (String logfile : logfiles) {
-			List<String> lines = LogReader.read(logfile);
-
-			LogAnalisysCallable call = new LogAnalisysCallable(lines, filters);
-			submitList.add(ex.submit(call));
-		}
-
-		List<AccessLog> loglist = new ArrayList<>();
-		for (Future<List<AccessLog>> resultList : submitList) {
-			try {
-				loglist.addAll(resultList.get());
-			} catch (InterruptedException | ExecutionException e) {
-			}
-		}
-		return loglist;
+		return lines;
 
 	}
 
