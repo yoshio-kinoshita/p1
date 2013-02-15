@@ -38,11 +38,24 @@ public class P1Util {
 		return "";
 	}
 
-	public static String parseTime(String line) {
+	public static String parseTime2String(String line) {
 		Matcher timeMater = P1Util.TIME.matcher(line);
 		if (timeMater.find()) {
 			return timeMater.group();
 		}
 		return "";
+	}
+
+	public static Date parseTime(String line) {
+		Matcher timeMater = P1Util.TIME.matcher(line);
+		if (timeMater.find()) {
+			SimpleDateFormat sdf = new SimpleDateFormat(P1Util.DATE_FOMAT,
+					Locale.US);
+			try {
+				return sdf.parse(timeMater.group());
+			} catch (ParseException e) {
+			}
+		}
+		return null;
 	}
 }

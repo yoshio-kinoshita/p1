@@ -1,7 +1,20 @@
 package entity;
-public class ApacheLogId {
+
+import java.util.Date;
+
+public class AccessLog {
+
 	private String ip;
 	private String url;
+	private Date accessDate;
+
+	public Date getAccessDate() {
+		return accessDate;
+	}
+
+	public void setAccessDate(Date accessDate) {
+		this.accessDate = accessDate;
+	}
 
 	public String getIp() {
 		return ip;
@@ -18,4 +31,5 @@ public class ApacheLogId {
 	public void setUrl(String url) {
 		this.url = url;
 	}
+
 }

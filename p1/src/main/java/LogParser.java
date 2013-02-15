@@ -1,7 +1,9 @@
 import java.util.List;
 
+import entity.AccessLog;
+
 public interface LogParser {
 
-	public List<Object[]> parser(List<String> logfiles, List<String> filters);
+	public List<AccessLog> parser(List<String> logfiles, List<String> filters);
 
 }

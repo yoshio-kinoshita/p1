@@ -13,38 +13,34 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import util.P1Util;
-import callable.FileReadCallable;
+import callable.LogAnalisysCallable;
+import callable.LogReader;
+import entity.AccessLog;
 
 public class LogParserImpl implements LogParser {
 
 	@Override
-	public List<Object[]> parser(List<String> logfiles, List<String> filters) {
+	public List<AccessLog> parser(List<String> logfiles, List<String> filters) {
 
 		logfiles = sortLogfiles(logfiles);
 
-		ExecutorService ex = Executors.newFixedThreadPool(5);
-		List<Object[]> resultList = new ArrayList<>();
+		ExecutorService ex = Executors.newFixedThreadPool(1);
+		List<Future<List<AccessLog>>> submitList = new ArrayList<>();
 		for (String logfile : logfiles) {
-			FileReadCallable log = new FileReadCallable(logfile,
-					new ArrayList<String>());
-//			Future<List<Object[]>> list = ex.submit(log);
-//			Future<List<Object[]>> list = ex.submit(log);
-//			
-//			try {
-////			for(Object[] o : list.get()) {
-////			String ip = (String)o[0];
-////			String url = (String)o[1];
-////			String date = (String )o[2];
-////			File file = new File();
-//				
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			} catch (ExecutionException e) {
-//				e.printStackTrace();
-//			}
+			List<String> lines = LogReader.read(logfile);
+
+			LogAnalisysCallable call = new LogAnalisysCallable(lines, filters);
+			submitList.add(ex.submit(call));
 		}
 
-		return resultList;
+		List<AccessLog> loglist = new ArrayList<>();
+		for (Future<List<AccessLog>> resultList : submitList) {
+			try {
+				loglist.addAll(resultList.get());
+			} catch (InterruptedException | ExecutionException e) {
+			}
+		}
+		return loglist;
 
 	}
 
@@ -56,8 +52,8 @@ public class LogParserImpl implements LogParser {
 					new File(logfile)))) {
 
 				String line = reader.readLine();
-//				Date date = P1Util.parseTime(line);
-//				list.add(new Object[] { date, logfile });
+				Date date = P1Util.parseTime(line);
+				list.add(new Object[] { date, logfile });
 
 			} catch (IOException e) {
 			}
