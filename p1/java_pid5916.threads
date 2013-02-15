@@ -1,0 +1,86 @@
+Thread 0x3156c678
+
+  locals:
+
+Thread 0x3156c6e0
+
+  locals:
+
+Thread 0x3156c748
+  at java.lang.Object.wait(J)V (Native Method)
+  at java.lang.ref.ReferenceQueue.remove(J)Ljava/lang/ref/Reference; (ReferenceQueue.java:135)
+  at java.lang.ref.ReferenceQueue.remove()Ljava/lang/ref/Reference; (ReferenceQueue.java:151)
+  at java.lang.ref.Finalizer$FinalizerThread.run()V (Finalizer.java:177)
+
+  locals:
+    objectId=0x3156c7b8, line=1
+    objectId=0x3156c7b0, line=1
+    objectId=0x3156c7b8, line=2
+    objectId=0x3156c748, line=3
+
+Thread 0x3156c7d0
+  at java.lang.Object.wait(J)V (Native Method)
+  at java.lang.Object.wait()V (Object.java:503)
+  at java.lang.ref.Reference$ReferenceHandler.run()V (Reference.java:133)
+
+  locals:
+    objectId=0x3156c838, line=1
+    objectId=0x3156c7d0, line=2
+    objectId=0x3156c838, line=2
+
+Thread 0x3156ca78
+  at java.lang.OutOfMemoryError.<init>()V (OutOfMemoryError.java:48)
+  at sun.text.resources.FormatData.getContents()[[Ljava/lang/Object; (FormatData.java:53)
+  at java.util.ListResourceBundle.loadLookup()V (ListResourceBundle.java:189)
+  at java.util.ListResourceBundle.handleGetObject(Ljava/lang/String;)Ljava/lang/Object; (ListResourceBundle.java:124)
+  at java.util.ResourceBundle.getObject(Ljava/lang/String;)Ljava/lang/Object; (ResourceBundle.java:387)
+  at java.util.ResourceBundle.getObject(Ljava/lang/String;)Ljava/lang/Object; (ResourceBundle.java:390)
+  at java.util.ResourceBundle.getObject(Ljava/lang/String;)Ljava/lang/Object; (ResourceBundle.java:390)
+  at java.util.ResourceBundle.getStringArray(Ljava/lang/String;)[Ljava/lang/String; (ResourceBundle.java:370)
+  at java.text.DateFormatSymbols.initializeData(Ljava/util/Locale;)V (DateFormatSymbols.java:664)
+  at java.text.DateFormatSymbols.<init>(Ljava/util/Locale;)V (DateFormatSymbols.java:141)
+  at java.text.DateFormatSymbols.getCachedInstance(Ljava/util/Locale;)Ljava/text/DateFormatSymbols; (DateFormatSymbols.java:369)
+  at java.text.DateFormatSymbols.getInstanceRef(Ljava/util/Locale;)Ljava/text/DateFormatSymbols; (DateFormatSymbols.java:343)
+  at java.text.SimpleDateFormat.<init>(Ljava/lang/String;Ljava/util/Locale;)V (SimpleDateFormat.java:583)
+  at util.P1Util.parseTime(Ljava/lang/String;)Ljava/util/Date; (P1Util.java:53)
+  at callable.LogReader.read(Ljava/util/List;Ljava/util/List;)Ljava/util/Map; (LogReader.java:58)
+  at LogParserImpl.parser(Ljava/util/List;Ljava/util/List;)Ljava/util/Map; (LogParserImpl.java:23)
+  at Main.main([Ljava/lang/String;)V (Main.java:20)
+
+  locals:
+    objectId=0x314ef9f0, line=1
+    objectId=0x314ef9f0, line=2
+    objectId=0x314ef9f0, line=3
+    objectId=0x37ac67c8, line=3
+    objectId=0x314ef9f0, line=4
+    objectId=0x37ac67c8, line=4
+    objectId=0x312cff60, line=5
+    objectId=0x37ac67c8, line=5
+    objectId=0x314efb38, line=6
+    objectId=0x37ac67c8, line=6
+    objectId=0x314efb38, line=7
+    objectId=0x37ac67c8, line=7
+    objectId=0x314ef980, line=8
+    objectId=0x315788c8, line=8
+    objectId=0x315495e0, line=8
+    objectId=0x314efb38, line=8
+    objectId=0x314ef980, line=9
+    objectId=0x315788c8, line=9
+    objectId=0x315788c8, line=10
+    objectId=0x314ef828, line=12
+    objectId=0x315788c8, line=12
+    objectId=0x314ef778, line=13
+    objectId=0x3156c858, line=14
+    objectId=0x3156c870, line=14
+    objectId=0x3156c8b0, line=14
+    objectId=0x3156c8c8, line=14
+    objectId=0x314ef748, line=14
+    objectId=0x314ef760, line=14
+    objectId=0x3156c8f8, line=15
+    objectId=0x3156c840, line=15
+    objectId=0x3156c858, line=15
+    objectId=0x3156c900, line=16
+    objectId=0x3156c910, line=16
+    objectId=0x3156c930, line=16
+    objectId=0x3156c8f8, line=16
+

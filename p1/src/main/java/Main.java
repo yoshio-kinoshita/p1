@@ -1,11 +1,13 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.lang.time.StopWatch;
 
-import service.Service;
-import service.ServiceImpl;
-import entity.AccessLog;
 import entity.Result;
 
 public class Main {
@@ -23,16 +25,39 @@ public class Main {
 
 		LogParser logParser = new LogParserImpl();
 
-		List<AccessLog> list = logParser.parser(logfiles,
+		Map<String, Result> map = logParser.parser(logfiles,
 				new ArrayList<String>());
 
-		System.out.println(list.size());
-		Service service = new ServiceImpl();
-		List<Result> result = service.createResult(list);
+		List<Entry<String, Result>> entries = new ArrayList<>(map.entrySet());
+		Collections.sort(entries, new Comparator<Object>() {
+			public int compare(Object obj1, Object obj2) {
+				Map.Entry<String, Result> ent1 = (Map.Entry<String, Result>) obj1;
+				Map.Entry<String, Result> ent2 = (Map.Entry<String, Result>) obj2;
+				Result val1 = (Result) ent1.getValue();
+				Result val2 = (Result) ent2.getValue();
 
-//		System.out.println(result.size());
+				int cnt = val2.getCount().compareTo(val1.getCount());
+
+				if (cnt != 0) {
+					return -cnt;
+				} else {
+					return val1.getFirstAccessDate().compareTo(
+							val1.getFirstAccessDate());
+				}
+			}
+		});
+
+		for (Entry<String, Result> entry : entries) {
+			Result result = entry.getValue();
+			System.out.println("count:" + result.getCount() + " ip:"
+					+ result.getIp() + " url:" + result.getUrl() + " access:"
+					+ result.getFirstAccessDate());
+		}
+
+		System.out.println(map.size());
 
 		stopWatch.stop();
 		System.out.println(stopWatch.getTime());
+
 	}
 }

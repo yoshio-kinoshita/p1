@@ -48,7 +48,7 @@ public class LogAnalisysCallable implements Callable<List<AccessLog>> {
 					continue;
 				}
 
-				Date date = P1Util.parseTime(line);
+				String date = P1Util.parseTime2String(line);
 				if (date.equals("")) {
 					continue;
 				}

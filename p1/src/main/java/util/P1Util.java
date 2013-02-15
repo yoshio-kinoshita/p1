@@ -2,6 +2,8 @@ package util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -16,6 +18,8 @@ public class P1Util {
 			.compile("(GET|HEAD|POST)\\s{1}[-_.!~*\\'()a-zA-Z0-9;\\/:\\@&=+\\$,%#]+");
 	public static final String FILTER_BASE = "(GET|HEAD|POST)\\s{1}($1){1}";
 
+	private static final String EXTENSIONS[] = { "cgi", "htm", "html", "php" };
+
 	public enum Month {
 
 	}
@@ -25,7 +29,19 @@ public class P1Util {
 	public static String parseUrl(String line) {
 		Matcher urlMater = P1Util.URL.matcher(line);
 		if (urlMater.find()) {
-			return urlMater.group();
+			String url = urlMater.group();
+			url = url.replaceAll("(GET|HEAD|POST)\\s{1}", "");
+
+			int lastindex = url.lastIndexOf(".");
+
+			if (lastindex > 0) {
+				String extension = url.substring(lastindex + 1);
+				if (Arrays.binarySearch(EXTENSIONS, extension) >= 0) {
+					return url;
+				}
+			} else {
+				return url;
+			}
 		}
 		return "";
 	}
@@ -57,5 +73,38 @@ public class P1Util {
 			}
 		}
 		return null;
+	}
+
+	public static void showMem() {
+
+		int mb = 1024 * 1024;
+
+		long fm = Runtime.getRuntime().freeMemory();
+		long tm = Runtime.getRuntime().totalMemory();
+
+		System.out.println("total: " + tm / mb + " ; free: " + fm / mb
+				+ " ; used: " + (tm - fm) / mb);
+	}
+
+	public static boolean checkAccessDate(Date lastAccessDate, Date accessDate) {
+		return accessDate.after(addSecond(lastAccessDate, 300));
+	}
+
+	/**
+	 * 対象時間に指定した秒数を足します。
+	 * 
+	 * @param date
+	 * @param amount
+	 * @return
+	 */
+	private static Date addSecond(Date date, int amount) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		c.add(Calendar.SECOND, amount);
+		return c.getTime();
+	}
+
+	public static String key(String ip, String url) {
+		return ip + url;
 	}
 }

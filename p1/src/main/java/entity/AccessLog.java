@@ -1,20 +1,11 @@
 package entity;
 
-import java.util.Date;
 
 public class AccessLog {
 
 	private String ip;
 	private String url;
-	private Date accessDate;
-
-	public Date getAccessDate() {
-		return accessDate;
-	}
-
-	public void setAccessDate(Date accessDate) {
-		this.accessDate = accessDate;
-	}
+	private String accessDate;
 
 	public String getIp() {
 		return ip;
@@ -30,6 +21,14 @@ public class AccessLog {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public String getAccessDate() {
+		return accessDate;
+	}
+
+	public void setAccessDate(String accessDate) {
+		this.accessDate = accessDate;
 	}
 
 }

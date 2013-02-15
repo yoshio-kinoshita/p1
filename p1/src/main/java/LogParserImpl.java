@@ -7,20 +7,22 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import util.P1Util;
 import callable.LogReader;
-import entity.AccessLog;
+import entity.Result;
 
 public class LogParserImpl implements LogParser {
 
 	@Override
-	public List<AccessLog> parser(List<String> logfiles, List<String> filters) {
+	public Map<String, Result> parser(List<String> logfiles,
+			List<String> filters) {
 
 		logfiles = sortLogfiles(logfiles);
-		List<AccessLog> lines = LogReader.read(logfiles, filters);
+		Map<String, Result> resultMap = LogReader.read(logfiles, filters);
 
-		return lines;
+		return resultMap;
 
 	}
 

@@ -4,51 +4,79 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import entity.AccessLog;
+import util.P1Util;
+import entity.Result;
 
 public class LogReader {
 
-	private static int mb = 1024 * 1024;
-
-	public static List<AccessLog> read(List<String> filenames,
+	public static Map<String, Result> read(List<String> filenames,
 			List<String> filters) {
-		List<AccessLog> accessloglist = new ArrayList<>();
-		List<String> lineList = new ArrayList<>();
 
-		ExecutorService ex = Executors.newFixedThreadPool(10);
-		List<Future<List<AccessLog>>> submitList = new ArrayList<>();
+		Map<String, Result> resultMap = new HashMap<>();
+		Map<String, Date> accessMap = new HashMap<>();
+
 		for (String filename : filenames) {
 
 			try (BufferedReader reader = new BufferedReader(new FileReader(
 					new File(filename)))) {
 				String line;
 
-				int i = 0;
 				while ((line = reader.readLine()) != null) {
+					boolean filtertarget = false;
+					for (String filter : filters) {
+						Pattern p = Pattern.compile(P1Util.FILTER_BASE.replace(
+								"$1", filter));
+						Matcher filterMatcher = p.matcher(line);
+						if (filterMatcher.find()) {
+							filtertarget = true;
+							break;
+						}
+					}
 
-					if (i < 10000) {
-						lineList.add(line);
-						i++;
+					if (filtertarget == false) {
 
-					} else {
-						LogAnalisysCallable call = new LogAnalisysCallable(
-								lineList, filters);
-						submitList.add(ex.submit(call));
-						lineList = new ArrayList<>();
-						i = 0;
+						String url = P1Util.parseUrl(line);
+						if (url.equals("")) {
+							continue;
+						}
 
-						long fm = Runtime.getRuntime().freeMemory();
-						long tm = Runtime.getRuntime().totalMemory();
-						
-						System.out.println("total: " + tm / mb + " ; free: "
-								+ fm / mb + " ; used: " + (tm - fm) / mb);
+						String ip = P1Util.parseIp(line);
+						if (ip.equals("")) {
+							continue;
+						}
+
+						Date accessDate = P1Util.parseTime(line);
+						if (accessDate == null) {
+							continue;
+						}
+
+						Date lastAccessDate = accessMap.get(ip);
+
+						if (lastAccessDate == null
+								|| P1Util.checkAccessDate(lastAccessDate,
+										accessDate)) {
+							Result result = resultMap.get(P1Util.key(ip, url));
+							if (result == null) {
+								result = new Result();
+								result.setIp(ip);
+								result.setUrl(url);
+								result.setFirstAccessDate(accessDate);
+								result.setCount(1);
+								resultMap.put(P1Util.key(ip, url), result);
+
+							} else {
+								result.setCount(result.getCount() + 1);
+								resultMap.put(P1Util.key(ip, url), result);
+							}
+							accessMap.put(ip, accessDate);
+						}
 					}
 				}
 			} catch (IOException e) {
@@ -56,12 +84,6 @@ public class LogReader {
 			}
 		}
 
-		for (Future<List<AccessLog>> futures : submitList) {
-			try {
-				accessloglist.addAll(futures.get());
-			} catch (InterruptedException | ExecutionException e) {
-			}
-		}
-		return accessloglist;
+		return resultMap;
 	}
 }
