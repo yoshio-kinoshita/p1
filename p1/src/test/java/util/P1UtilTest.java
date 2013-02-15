@@ -47,6 +47,9 @@ public class P1UtilTest {
 
 		url = "HEAD / HTTP/1.0";
 		assertEquals("/", P1Util.parseUrl(url));
+		
+		url = "HEAD /hogehoge/ HTTP/1.0";
+		assertEquals("/hogehoge/", P1Util.parseUrl(url));
 
 	}
 

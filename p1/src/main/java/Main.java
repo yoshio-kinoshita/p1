@@ -1,10 +1,10 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.apache.commons.lang.time.StopWatch;
 
@@ -28,7 +28,22 @@ public class Main {
 		Map<String, Result> map = logParser.parser(logfiles,
 				new ArrayList<String>());
 
+		Map<String, Integer> countMap = new HashMap<>();
+
+		for (Entry<String, Result> entries : map.entrySet()) {
+			Result result = entries.getValue();
+			String ip = result.getIp();
+			Integer count = countMap.get(ip);
+			if (count == null) {
+				count = result.getCount();
+			} else {
+				count = count + result.getCount();
+				;
+			}
+			countMap.put(ip, count);
+		}
 		List<Entry<String, Result>> entries = new ArrayList<>(map.entrySet());
+
 		Collections.sort(entries, new Comparator<Object>() {
 			public int compare(Object obj1, Object obj2) {
 				Map.Entry<String, Result> ent1 = (Map.Entry<String, Result>) obj1;
@@ -36,10 +51,10 @@ public class Main {
 				Result val1 = (Result) ent1.getValue();
 				Result val2 = (Result) ent2.getValue();
 
-				int cnt = val2.getCount().compareTo(val1.getCount());
+				int cnt = val1.getCount().compareTo(val2.getCount());
 
 				if (cnt != 0) {
-					return -cnt;
+					return -1 * cnt;
 				} else {
 					return val1.getFirstAccessDate().compareTo(
 							val1.getFirstAccessDate());
@@ -49,12 +64,10 @@ public class Main {
 
 		for (Entry<String, Result> entry : entries) {
 			Result result = entry.getValue();
-			System.out.println("count:" + result.getCount() + " ip:"
+			System.out.println("count:" + countMap.get(result.getIp()) + " ip:"
 					+ result.getIp() + " url:" + result.getUrl() + " access:"
 					+ result.getFirstAccessDate());
 		}
-
-		System.out.println(map.size());
 
 		stopWatch.stop();
 		System.out.println(stopWatch.getTime());
