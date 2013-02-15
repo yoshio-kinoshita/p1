@@ -77,7 +77,13 @@ public class Main {
 				Integer val2 = (Integer) ent2.getValue().getCount();
 
 				int cnt = val1.compareTo(val2);
-				return -1 * cnt;
+
+				if (cnt != 0) {
+					return -1 * cnt;
+				} else {
+					return ent1.getValue().getFirstAccessDate()
+							.compareTo(ent2.getValue().getFirstAccessDate());
+				}
 			}
 		});
 
