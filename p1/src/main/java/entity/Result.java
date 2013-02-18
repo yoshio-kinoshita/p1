@@ -6,7 +6,7 @@ public class Result {
 
 	private String ip;
 	private String url;
-	private Integer count;
+	private int count;
 	private Date firstAccessDate;
 
 	public Date getFirstAccessDate() {
@@ -33,11 +33,15 @@ public class Result {
 		this.url = url;
 	}
 
-	public Integer getCount() {
+	public void setCount(Integer count) {
+		this.count = count;
+	}
+
+	public int getCount() {
 		return count;
 	}
 
-	public void setCount(Integer count) {
+	public void setCount(int count) {
 		this.count = count;
 	}
 

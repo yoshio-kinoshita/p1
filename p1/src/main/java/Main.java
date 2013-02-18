@@ -13,9 +13,9 @@ import entity.Result;
 public class Main {
 
 	public static void main(String args[]) {
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
 
+		StopWatch totalstopWatch = new StopWatch();
+		totalstopWatch.start();
 		List<String> logfiles = new ArrayList<String>();
 		logfiles.add("src/test/resources/p1gp2_log1.txt");
 		logfiles.add("src/test/resources/p1gp2_log2.txt");
@@ -24,18 +24,31 @@ public class Main {
 		logfiles.add("src/test/resources/p1gp2_log5.txt");
 
 		LogParser logParser = new LogParserImpl();
-
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
 		Map<String, Result> resultMap = logParser.parser(logfiles,
 				new ArrayList<String>());
 
 		stopWatch.stop();
 		System.out.println("resultMap:" + stopWatch.getTime());
 
-		stopWatch.reset();
+		stopWatch = new StopWatch();
 		stopWatch.start();
 
 		List<Entry<String, Result>> resultEntries = new ArrayList<>(
 				resultMap.entrySet());
+
+		for (Entry<String, Result> entry : resultEntries) {
+			Result result = entry.getValue();
+			if (result.getIp().equals("60.32.3.172")) {
+				System.out.println(result.getIp() + "," + result.getCount()
+						+ "," + result.getFirstAccessDate() + ","
+						+ result.getUrl());
+
+			}
+		}
+
+		System.out.println("-------------");
 
 		// ip - cnt - urlでソート
 		Collections.sort(resultEntries, new Comparator<Object>() {
@@ -46,7 +59,7 @@ public class Main {
 				Result val2 = (Result) ent2.getValue();
 
 				int ip = val1.getIp().compareTo(val2.getIp());
-				int cnt = val1.getCount().compareTo(val2.getCount());
+				int cnt = val1.getCount() - val2.getCount();
 
 				if (ip != 0) {
 					return ip;
@@ -57,12 +70,6 @@ public class Main {
 				}
 			}
 		});
-
-		stopWatch.stop();
-		System.out.println("ip - cnt - urlでソート:" + stopWatch.getTime());
-
-		stopWatch.reset();
-		stopWatch.start();
 
 		// ipアドレスごとにResult生成
 		Map<String, Result> countMap = new HashMap<>();
@@ -78,12 +85,6 @@ public class Main {
 			}
 			countMap.put(ip, countResult);
 		}
-
-		stopWatch.stop();
-		System.out.println("ipアドレスごとにResult生成:" + stopWatch.getTime());
-
-		stopWatch.reset();
-		stopWatch.start();
 
 		List<Entry<String, Result>> countEntries = new ArrayList<>(
 				countMap.entrySet());
@@ -105,8 +106,8 @@ public class Main {
 			}
 		});
 
-		stopWatch.stop();
-		System.out.println("ソート:" + stopWatch.getTime());
+		totalstopWatch.stop();
+		System.out.println("total:" + totalstopWatch.getTime());
 
 		for (Entry<String, Result> entry : countEntries) {
 			Result result = entry.getValue();

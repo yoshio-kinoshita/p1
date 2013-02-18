@@ -8,7 +8,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
+
+import org.apache.commons.lang.time.StopWatch;
 
 import util.P1Util;
 import entity.Result;
@@ -21,25 +22,38 @@ public class LogReader {
 		Map<String, Result> resultMap = new HashMap<>();
 		Map<String, Date> accessMap = new HashMap<>();
 
-		Pattern ptn = Pattern.compile(P1Util.SPACE);
 		for (String filename : filenames) {
 
 			try (BufferedReader reader = new BufferedReader(new FileReader(
 					new File(filename)))) {
 				String line;
 
+				StopWatch watch = new StopWatch();
+				watch.start();
 				while ((line = reader.readLine()) != null) {
 
-					String[] lineArray = ptn.split(line, P1Util.MAX_SPLIT);
+					int ipIndex = line.indexOf(P1Util.SPACE);
+					int dateStartIndex = ipIndex + 6;
+					int dateEndIndex = dateStartIndex + 20;
 
-					String method = lineArray[5];
-					String url = lineArray[6];
+					int methodStartIndex = dateEndIndex + 9;
+					int methodEndIndex = line.indexOf(P1Util.SPACE,
+							methodStartIndex);
+					String method = line.substring(methodStartIndex,
+							methodEndIndex);
+
+					int urlStartIndex = methodEndIndex + 1;
+					int urlEndIndex = line.indexOf(P1Util.SPACE, urlStartIndex);
+					String url = line.substring(urlStartIndex, urlEndIndex);
+
 					if (P1Util.isFilterd(method, url, filters) == false) {
 
-						String ip = lineArray[0];
+						String ip = line.substring(0, ipIndex);
 						Date lastAccessDate = accessMap.get(ip);
 
-						Date accessDate = P1Util.parseTime(lineArray[3]);
+						Date accessDate = P1Util.parseTime(line.substring(
+								dateStartIndex, dateEndIndex));
+
 						if (lastAccessDate == null
 								|| P1Util.checkAccessDate(lastAccessDate,
 										accessDate)) {
@@ -53,15 +67,18 @@ public class LogReader {
 								result.setFirstAccessDate(accessDate);
 								result.setCount(1);
 								resultMap.put(key, result);
-
 							} else {
 								result.setCount(result.getCount() + 1);
 								resultMap.put(key, result);
 							}
-							accessMap.put(ip, accessDate);
 						}
+						accessMap.put(ip, accessDate);
+
 					}
 				}
+
+				watch.stop();
+				System.out.println("1ファイル:" + watch.getTime());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
