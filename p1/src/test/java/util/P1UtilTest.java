@@ -99,10 +99,39 @@ public class P1UtilTest {
 	@Test
 	public void isFilterd() {
 
-		String logLine = "GET /maeyes/solution/genkakanri.html?lfcpid=2&gclid=CPimhf2n3a8CFUKEpAod0QiA_w HTTP/1.1";
+		String logLine = "59.156.140.249 - - [01/May/2012:04:31:20 +0900] \"GET /maeyes/img/common/com_h_logo.gif HTTP/1.1\" 200 3316 \"http://www.bbreak.co.jp/maeyes/solution/genkakanri.html?lfcpid=2&gclid=CPimhf2n3a8CFUKEpAod0QiA_w\" \"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.162 Safari/535.19";
+		logLine = logLine.replace("\"", "");
+
+		String[] logs = logLine.split(P1Util.SPACE, P1Util.MAX_SPLIT);
+
+		System.out.println(logs[5]);
+		System.out.println(logs[6]);
 
 		List<String> filters = new ArrayList<>();
-		assertFalse(P1Util.isFilterd(logLine, filters));
+		assertFalse(P1Util
+				.isFilterd(logs[5], P1Util.parseUrl(logs[6]), filters));
+
+		filters = new ArrayList<>();
+		filters.add("/maeyes/i/");
+		assertFalse(P1Util.isFilterd(logs[5], logs[6], filters));
+
+		filters = new ArrayList<>();
+		filters.add("/maeyes/i/");
+		filters.add("/maeyes/img/");
+		assertTrue(P1Util.isFilterd(logs[5], logs[6], filters));
+
+		filters = new ArrayList<>();
+		filters.add("/maeyes/");
+		assertTrue(P1Util.isFilterd(logs[5], logs[6], filters));
+
+		filters = new ArrayList<>();
+		filters.add("/maeyes");
+		assertTrue(P1Util.isFilterd(logs[5], logs[6], filters));
+	}
+
+	@Test
+	public void match() {
+		assertTrue("GET".matches(P1Util.FILTER_BASE));
 	}
 
 }

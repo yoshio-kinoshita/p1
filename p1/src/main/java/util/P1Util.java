@@ -23,18 +23,33 @@ public class P1Util {
 	public static final Pattern TIME = Pattern
 			.compile("\\d+\\/[A-Z][a-z]{2}\\/\\d+:\\d+:\\d+:\\d+");
 	public static final Pattern URL = Pattern
-			.compile("(GET|HEAD|POST)\\s{1}[-_.!~*\\'()a-zA-Z0-9;\\/:\\@&=+\\$,%#]+");
-	public static final String FILTER_BASE = "(GET|HEAD|POST)\\s{1}($1){1}";
+			.compile("[-_.!~*\\'()a-zA-Z0-9;\\/:\\@&=+\\$,%#]+");
+	public static final String FILTER_BASE = "GET|HEAD|POST";
 
-	private static final String EXTENSIONS[] = { "cgi", "htm", "html", "php" };
+	public static final String EXTENSIONS[] = { "cgi", "htm", "html", "php" };
+
+	public static String SPACE = "\\s";
+
+	public static String MARK = "\"";
+
+	public static String SLASH = "/";
+
+	public static String COLON = ".";
+
+	public static int MAX_SPLIT = 8;
 
 	public enum Month {
 
 	}
 
-	public static final String DATE_FOMAT = "dd/MMM/yyyy:HH:mm:ss";
+	public static final String DATE_FOMAT = "[dd/MMM/yyyy:HH:mm:ss";
 
 	public static String parseUrl(String line) {
+
+		if (!line.contains("?")) {
+			return line;
+		}
+
 		Matcher urlMater = P1Util.URL.matcher(line);
 		if (urlMater.find()) {
 			String url = urlMater.group();
@@ -70,17 +85,14 @@ public class P1Util {
 		return "";
 	}
 
-	public static Date parseTime(String line) {
-		Matcher timeMater = P1Util.TIME.matcher(line);
-		if (timeMater.find()) {
-			SimpleDateFormat sdf = new SimpleDateFormat(P1Util.DATE_FOMAT,
-					Locale.US);
-			try {
-				return sdf.parse(timeMater.group());
-			} catch (ParseException e) {
-			}
+	public static Date parseTime(String accessDate) {
+		SimpleDateFormat sdf = new SimpleDateFormat(P1Util.DATE_FOMAT,
+				Locale.US);
+		try {
+			return sdf.parse(accessDate);
+		} catch (ParseException e) {
+			throw new RuntimeException(e);
 		}
-		return null;
 	}
 
 	public static void showMem() {
@@ -124,8 +136,9 @@ public class P1Util {
 					new File(logfile)))) {
 
 				String line = reader.readLine();
-				Date date = P1Util.parseTime(line);
-				list.add(new Object[] { date, logfile });
+				line = line.replace("\"", "");
+				Date accessDate = P1Util.parseTime(line.split(P1Util.SPACE)[3]);
+				list.add(new Object[] { accessDate, logfile });
 
 			} catch (IOException e) {
 			}
@@ -152,17 +165,38 @@ public class P1Util {
 			return d1.compareTo(d2);
 		}
 	}
-	
-	public static boolean isFilterd(String logLine ,List<String> filters) {
-		for (String filter : filters) {
-			Pattern p = Pattern.compile(P1Util.FILTER_BASE.replace(
-					"$1", filter));
-			Matcher filterMatcher = p.matcher(logLine);
-			if (filterMatcher.find()) {
-				return true;
+
+	public static boolean isFilterd(String method, String url,
+			List<String> filters) {
+		if (method.matches(FILTER_BASE)) {
+			for (String filter : filters) {
+
+				String urlWithSlash = url;
+				if (urlWithSlash.endsWith(SLASH)) {
+					urlWithSlash = urlWithSlash + SLASH;
+				}
+
+				if (urlWithSlash.startsWith(filter)) {
+					return true;
+				} else {
+					return false;
+				}
 			}
+
+			int lastindex = url.lastIndexOf(COLON);
+			if (lastindex > 0) {
+				String extension = url.substring(lastindex + 1);
+				if (Arrays.binarySearch(EXTENSIONS, extension) >= 0) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+		} else {
+			return true;
 		}
-		
+
 		return false;
+
 	}
 }

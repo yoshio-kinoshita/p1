@@ -28,22 +28,16 @@ public class LogReader {
 
 				while ((line = reader.readLine()) != null) {
 
-					if (P1Util.isFilterd(line, filters) == false) {
+					line = line.replace(P1Util.MARK, "");
 
-						String url = P1Util.parseUrl(line);
-						if (url.equals("")) {
-							continue;
-						}
+					String[] lineArray = line.split(P1Util.SPACE,
+							P1Util.MAX_SPLIT);
 
-						String ip = P1Util.parseIp(line);
-						if (ip.equals("")) {
-							continue;
-						}
-
-						Date accessDate = P1Util.parseTime(line);
-						if (accessDate == null) {
-							continue;
-						}
+					String ip = lineArray[0];
+					Date accessDate = P1Util.parseTime(lineArray[3]);
+					String method = lineArray[5];
+					String url = lineArray[6];
+					if (P1Util.isFilterd(method, url, filters) == false) {
 
 						Date lastAccessDate = accessMap.get(ip);
 
