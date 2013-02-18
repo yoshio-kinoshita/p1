@@ -28,6 +28,12 @@ public class Main {
 		Map<String, Result> resultMap = logParser.parser(logfiles,
 				new ArrayList<String>());
 
+		stopWatch.stop();
+		System.out.println("resultMap:" + stopWatch.getTime());
+
+		stopWatch.reset();
+		stopWatch.start();
+
 		List<Entry<String, Result>> resultEntries = new ArrayList<>(
 				resultMap.entrySet());
 
@@ -52,6 +58,12 @@ public class Main {
 			}
 		});
 
+		stopWatch.stop();
+		System.out.println("ip - cnt - urlでソート:" + stopWatch.getTime());
+
+		stopWatch.reset();
+		stopWatch.start();
+
 		// ipアドレスごとにResult生成
 		Map<String, Result> countMap = new HashMap<>();
 		for (Entry<String, Result> entries : resultEntries) {
@@ -66,6 +78,12 @@ public class Main {
 			}
 			countMap.put(ip, countResult);
 		}
+
+		stopWatch.stop();
+		System.out.println("ipアドレスごとにResult生成:" + stopWatch.getTime());
+
+		stopWatch.reset();
+		stopWatch.start();
 
 		List<Entry<String, Result>> countEntries = new ArrayList<>(
 				countMap.entrySet());
@@ -87,14 +105,14 @@ public class Main {
 			}
 		});
 
+		stopWatch.stop();
+		System.out.println("ソート:" + stopWatch.getTime());
+
 		for (Entry<String, Result> entry : countEntries) {
 			Result result = entry.getValue();
 			System.out.println(result.getIp() + "," + result.getCount() + ","
 					+ result.getFirstAccessDate() + "," + result.getUrl());
 		}
-
-		stopWatch.stop();
-		System.out.println(stopWatch.getTime());
 
 	}
 }

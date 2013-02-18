@@ -14,7 +14,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class P1Util {
@@ -24,7 +23,7 @@ public class P1Util {
 			.compile("\\d+\\/[A-Z][a-z]{2}\\/\\d+:\\d+:\\d+:\\d+");
 	public static final Pattern URL = Pattern
 			.compile("[-_.!~*\\'()a-zA-Z0-9;\\/:\\@&=+\\$,%#]+");
-	public static final String FILTER_BASE = "GET|HEAD|POST";
+	public static final String FILTER_BASE = "\"GET|\"HEAD|\"POST";
 
 	public static final String EXTENSIONS[] = { "cgi", "htm", "html", "php" };
 
@@ -43,47 +42,6 @@ public class P1Util {
 	}
 
 	public static final String DATE_FOMAT = "[dd/MMM/yyyy:HH:mm:ss";
-
-	public static String parseUrl(String line) {
-
-		if (!line.contains("?")) {
-			return line;
-		}
-
-		Matcher urlMater = P1Util.URL.matcher(line);
-		if (urlMater.find()) {
-			String url = urlMater.group();
-			url = url.replaceAll("(GET|HEAD|POST)\\s{1}", "");
-
-			int lastindex = url.lastIndexOf(".");
-
-			if (lastindex > 0) {
-				String extension = url.substring(lastindex + 1);
-				if (Arrays.binarySearch(EXTENSIONS, extension) >= 0) {
-					return url;
-				}
-			} else {
-				return url;
-			}
-		}
-		return "";
-	}
-
-	public static String parseIp(String line) {
-		Matcher ipMater = P1Util.IP.matcher(line);
-		if (ipMater.find()) {
-			return ipMater.group();
-		}
-		return "";
-	}
-
-	public static String parseTime2String(String line) {
-		Matcher timeMater = P1Util.TIME.matcher(line);
-		if (timeMater.find()) {
-			return timeMater.group();
-		}
-		return "";
-	}
 
 	public static Date parseTime(String accessDate) {
 		SimpleDateFormat sdf = new SimpleDateFormat(P1Util.DATE_FOMAT,
@@ -136,7 +94,6 @@ public class P1Util {
 					new File(logfile)))) {
 
 				String line = reader.readLine();
-				line = line.replace("\"", "");
 				Date accessDate = P1Util.parseTime(line.split(P1Util.SPACE)[3]);
 				list.add(new Object[] { accessDate, logfile });
 
@@ -168,13 +125,15 @@ public class P1Util {
 
 	public static boolean isFilterd(String method, String url,
 			List<String> filters) {
-		if (method.matches(FILTER_BASE)) {
-			for (String filter : filters) {
 
-				String urlWithSlash = url;
-				if (urlWithSlash.endsWith(SLASH)) {
-					urlWithSlash = urlWithSlash + SLASH;
-				}
+		if (method.matches(FILTER_BASE)) {
+
+			String urlWithSlash = url;
+			if (!urlWithSlash.endsWith(SLASH)) {
+				urlWithSlash = urlWithSlash + SLASH;
+			}
+
+			for (String filter : filters) {
 
 				if (urlWithSlash.startsWith(filter)) {
 					return true;
