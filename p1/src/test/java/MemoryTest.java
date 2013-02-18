@@ -1,6 +1,3 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -90,7 +87,7 @@ public class MemoryTest {
 			l.add(o);
 		}
 	}
-	
+
 	@Test
 	public void array2() {
 
@@ -116,22 +113,10 @@ public class MemoryTest {
 			o2[index] = o;
 			i++;
 			index++;
-			
-			if(index >= o2.length) {
+
+			if (index >= o2.length) {
 				break;
 			}
 		}
 	}
-	
-	public void read() {
-		
-	try (BufferedReader reader = new BufferedReader(new FileReader(
-			new File(filename)))) {
-		String line;
-
-		while ((line = reader.readLine()) != null) {
-		}
-		}
-	}
-
 }

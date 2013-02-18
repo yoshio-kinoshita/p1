@@ -1,9 +1,14 @@
 package util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.junit.Test;
@@ -47,7 +52,7 @@ public class P1UtilTest {
 
 		url = "HEAD / HTTP/1.0";
 		assertEquals("/", P1Util.parseUrl(url));
-		
+
 		url = "HEAD /hogehoge/ HTTP/1.0";
 		assertEquals("/hogehoge/", P1Util.parseUrl(url));
 
@@ -67,6 +72,37 @@ public class P1UtilTest {
 			System.out.println(s);
 		}
 
+	}
+
+	@Test
+	public void sortLogfiles() throws NoSuchMethodException, SecurityException,
+			IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException {
+
+		List<String> logfiles = new ArrayList<String>();
+		logfiles.add("src/test/resources/p1gp2_log5.txt");
+		logfiles.add("src/test/resources/p1gp2_log4.txt");
+		logfiles.add("src/test/resources/p1gp2_log3.txt");
+		logfiles.add("src/test/resources/p1gp2_log2.txt");
+		logfiles.add("src/test/resources/p1gp2_log1.txt");
+
+		logfiles = P1Util.sortLogfiles(logfiles);
+
+		assertEquals(logfiles.get(0), "src/test/resources/p1gp2_log1.txt");
+		assertEquals(logfiles.get(1), "src/test/resources/p1gp2_log2.txt");
+		assertEquals(logfiles.get(2), "src/test/resources/p1gp2_log3.txt");
+		assertEquals(logfiles.get(3), "src/test/resources/p1gp2_log4.txt");
+		assertEquals(logfiles.get(4), "src/test/resources/p1gp2_log5.txt");
+
+	}
+
+	@Test
+	public void isFilterd() {
+
+		String logLine = "GET /maeyes/solution/genkakanri.html?lfcpid=2&gclid=CPimhf2n3a8CFUKEpAod0QiA_w HTTP/1.1";
+
+		List<String> filters = new ArrayList<>();
+		assertFalse(P1Util.isFilterd(logLine, filters));
 	}
 
 }

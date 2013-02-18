@@ -8,8 +8,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import util.P1Util;
 import entity.Result;
@@ -29,18 +27,8 @@ public class LogReader {
 				String line;
 
 				while ((line = reader.readLine()) != null) {
-					boolean filtertarget = false;
-					for (String filter : filters) {
-						Pattern p = Pattern.compile(P1Util.FILTER_BASE.replace(
-								"$1", filter));
-						Matcher filterMatcher = p.matcher(line);
-						if (filterMatcher.find()) {
-							filtertarget = true;
-							break;
-						}
-					}
 
-					if (filtertarget == false) {
+					if (P1Util.isFilterd(line, filters) == false) {
 
 						String url = P1Util.parseUrl(line);
 						if (url.equals("")) {
