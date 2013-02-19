@@ -12,14 +12,14 @@ import java.util.Map;
 import util.P1Util;
 import entity.Result;
 
-public class LogReader {
+public class LogReader{
 
 	public static Map<String, Result> read(List<String> filenames,
 			String[] filters) {
 
-		Map<String, Result> resultMap = new HashMap<>(15000);
-		Map<String, Date> accessMap = new HashMap<>(10000);
-		
+		Map<String, Result> resultMap = new HashMap<>();
+		Map<String, Date> accessMap = new HashMap<>();
+
 		filenames = P1Util.sortLogfiles(filenames);
 
 		for (String filename : filenames) {
@@ -31,23 +31,25 @@ public class LogReader {
 				while ((line = reader.readLine()) != null) {
 
 					int ipIndex = line.indexOf(P1Util.SPACE);
-					int dateStartIndex = ipIndex + 6;
-					int dateEndIndex = dateStartIndex + 20;
+					int dateStartIndex = ipIndex + P1Util.DATE_START_INDEX;
+					int dateEndIndex = dateStartIndex + P1Util.DATE_END_INDEX;
 
-					int methodStartIndex = dateEndIndex + 9;
+					int methodStartIndex = dateEndIndex
+							+ P1Util.METHOD_START_INDEX;
 					int methodEndIndex = line.indexOf(P1Util.SPACE,
 							methodStartIndex);
 					String method = line.substring(methodStartIndex,
 							methodEndIndex);
 
-					int urlStartIndex = methodEndIndex + 1;
+					int urlStartIndex = methodEndIndex
+							+ P1Util.METHOD_END_INDEX;
 					int urlEndIndexSpace = line.indexOf(P1Util.SPACE,
 							urlStartIndex);
 					int urlEndIndexQuestion = line.indexOf(P1Util.QUESTION,
 							urlStartIndex);
 
 					int urlEndIndex;
-					if (urlEndIndexQuestion < 0) {
+					if (urlEndIndexQuestion < P1Util.ZERO) {
 						urlEndIndex = urlEndIndexSpace;
 					} else if (urlEndIndexQuestion > urlEndIndexSpace) {
 						urlEndIndex = urlEndIndexSpace;
@@ -58,20 +60,13 @@ public class LogReader {
 					String url = line.substring(urlStartIndex, urlEndIndex);
 
 					if (P1Util.isFilterd(method, url, filters) == false) {
-						
 
-						String ip = line.substring(0, ipIndex);
+						String ip = line.substring(P1Util.ZERO, ipIndex);
 						Date lastAccessDate = accessMap.get(ip);
 
-						long start = System.currentTimeMillis();
 						Date accessDate = P1Util.parseTime(line.substring(
 								dateStartIndex, dateEndIndex));
 
-						long end = System.currentTimeMillis();
-						long time = end - start;
-						if(time > 0) {
-							System.out.println("time:" + time);
-						}
 						if (lastAccessDate == null
 								|| P1Util.checkAccessDate(lastAccessDate,
 										accessDate)) {
@@ -90,10 +85,7 @@ public class LogReader {
 							}
 							accessMap.put(ip, accessDate);
 						}
-
 					}
-
-
 				}
 
 			} catch (IOException e) {

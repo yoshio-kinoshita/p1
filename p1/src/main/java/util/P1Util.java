@@ -10,9 +10,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class P1Util {
 	private static final String FILTER_BASE[] = { "GET", "HEAD", "POST" };
@@ -42,26 +40,13 @@ public class P1Util {
 	private static final int MI_END_INDEX = MI_START_INDEX + 2;
 	private static final int SS_START_INDEX = MI_END_INDEX + 1;
 	private static final int SS_END_INDEX = SS_START_INDEX + 2;
-	
-	private static Map<String, Integer> convertMap = new HashMap<>();
-	
-	static {
-		convertMap.put("Jan", Integer.valueOf(0));
-		convertMap.put("Feb", Integer.valueOf(1));
-		convertMap.put("Mar", Integer.valueOf(2));
-		convertMap.put("Apr", Integer.valueOf(3));
-		convertMap.put("May", Integer.valueOf(4));
-		convertMap.put("Jun", Integer.valueOf(5));
-		convertMap.put("Jul", Integer.valueOf(6));
-		convertMap.put("Aug", Integer.valueOf(7));
-		convertMap.put("Sep", Integer.valueOf(8));
-		convertMap.put("Oct", Integer.valueOf(9));
-		convertMap.put("Nov", Integer.valueOf(10));
-		convertMap.put("Dec", Integer.valueOf(11));
-	}
 
-	private static Calendar c = Calendar.getInstance();
-
+	public static final int DATE_START_INDEX = 6;
+	public static final int DATE_END_INDEX = 20;
+	public static final int METHOD_START_INDEX = 9;
+	public static final int METHOD_END_INDEX = 1;
+	public static final int ZERO = 0;
+	
 	private static int convertMMMType(String value) {
 		switch (value) {
 		case "Jan":
@@ -99,21 +84,21 @@ public class P1Util {
 	 * @return
 	 */
 	public static Date parseTime(String accessDate) {
-		int dd = Integer.valueOf(accessDate.substring(DD_START_INDEX,
+		Calendar c = Calendar.getInstance();
+		int dd = Integer.parseInt(accessDate.substring(DD_START_INDEX,
 				DD_END_INDEX));
 		int mm = convertMMMType(accessDate.substring(MM_START_INDEX,
 				MM_END_INDEX));
-		int yyyy = Integer.valueOf(accessDate.substring(YYYY_START_INDEX,
+		int yyyy = Integer.parseInt(accessDate.substring(YYYY_START_INDEX,
 				YYYY_END_INDEX));
-		int hh = Integer.valueOf(accessDate.substring(HH_START_INDEX,
+		int hh = Integer.parseInt(accessDate.substring(HH_START_INDEX,
 				HH_END_INDEX));
-		int mi = Integer.valueOf(accessDate.substring(MI_START_INDEX,
+		int mi = Integer.parseInt(accessDate.substring(MI_START_INDEX,
 				MI_END_INDEX));
-		int ss = Integer.valueOf(accessDate.substring(SS_START_INDEX,
+		int ss = Integer.parseInt(accessDate.substring(SS_START_INDEX,
 				SS_END_INDEX));
 
-		c.set(Integer.valueOf(yyyy), mm, Integer.valueOf(dd),
-				Integer.valueOf(hh), Integer.valueOf(mi), Integer.valueOf(ss));
+		c.set(yyyy, mm, dd, hh, mi, ss);
 		c.set(Calendar.MILLISECOND, 0);
 
 		return c.getTime();
@@ -132,6 +117,8 @@ public class P1Util {
 	 * @return
 	 */
 	private static Date addSecond(Date date, int amount) {
+		Calendar c = Calendar.getInstance();
+
 		c.setTime(date);
 		c.set(Calendar.MILLISECOND, 0);
 		c.add(Calendar.SECOND, amount);

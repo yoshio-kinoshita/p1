@@ -8,6 +8,8 @@ import java.util.List;
 import org.apache.commons.lang.time.StopWatch;
 import org.junit.Test;
 
+import util.P1Util;
+
 public class Speed {
 
 	private static String log = "60.32.3.172 - - [01/May/2012:04:10:03 +0900] \"HEAD / HTTP/1.0\" 200 392 \"-\" \"Webmin";
@@ -173,69 +175,70 @@ public class Speed {
 			return "12";
 		}
 	}
-	
+
 	@Test
 	public void stringint() {
-		
+
 		String a = "1";
-		
+
 		StopWatch watch = new StopWatch();
 		watch.start();
-		for(int i = 0; i < 2000000; i++) {
+		for (int i = 0; i < 2000000; i++) {
 			int x = Integer.parseInt(a);
-			
+
 		}
-		
+
 		watch.stop();
 		System.out.println("parseint : " + watch.getTime());
-		
+
 		watch = new StopWatch();
 		watch.start();
-		for(int i = 0; i < 2000000; i++) {
+		for (int i = 0; i < 2000000; i++) {
 			int x = Integer.valueOf(a);
 		}
-		
+
 		watch.stop();
 		System.out.println("valueof : " + watch.getTime());
-		
+
 		watch = new StopWatch();
 		watch.start();
-		for(int i = 0; i < 2000000; i++) {
+		for (int i = 0; i < 2000000; i++) {
 			int x = new Integer(a);
 		}
-		
-		
+
 		watch.stop();
 		System.out.println("constractor : " + watch.getTime());
-		
+
 		System.out.println("------------");
-		
+
 		watch = new StopWatch();
 		watch.start();
-		for(int i = 0; i < 2000000; i++) {
+		for (int i = 0; i < 2000000; i++) {
 			byte x = Byte.parseByte(a);
 		}
-		
+
 		watch.stop();
 		System.out.println("parseint : " + watch.getTime());
-		
+
 		watch = new StopWatch();
 		watch.start();
-		for(int i = 0; i < 2000000; i++) {
+		for (int i = 0; i < 2000000; i++) {
 			byte x = Byte.valueOf(a);
 		}
-		
+
 		watch.stop();
 		System.out.println("valueof : " + watch.getTime());
-		
+
 		watch = new StopWatch();
 		watch.start();
-		for(int i = 0; i < 2000000; i++) {
+		for (int i = 0; i < 2000000; i++) {
 			byte x = new Byte(a);
 		}
-		
+
 		watch.stop();
 		System.out.println("constractor : " + watch.getTime());
 		
 	}
+
+
 }

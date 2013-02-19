@@ -1,3 +1,4 @@
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,18 +31,10 @@ public class Main {
 		logfiles.add("src/test/resources/p1gp2_log5.txt");
 
 		List<String> filters = new ArrayList<>();
-//		filters.add("/webmail/");
+		// filters.add("/webmail/");
 
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
 		Map<String, Result> resultMap = LogReader.read(logfiles,
 				filters.toArray(new String[0]));
-
-		stopWatch.stop();
-		System.out.println("resultMap:" + stopWatch.getTime());
-
-		stopWatch = new StopWatch();
-		stopWatch.start();
 
 		List<Entry<String, Result>> accessEntries = new ArrayList<>(
 				resultMap.entrySet());
@@ -57,14 +50,16 @@ public class Main {
 				Result val2 = (Result) ent2.getValue();
 
 				int ip = val1.getIp().compareTo(val2.getIp());
-				int cnt = val2.getCount() - val1.getCount();
 
 				if (ip != 0) {
 					return ip;
-				} else if (cnt != 0) {
-					return cnt;
 				} else {
-					return val1.getUrl().compareTo(val2.getUrl());
+					int cnt = val2.getCount() - val1.getCount();
+					if (cnt != 0) {
+						return cnt;
+					} else {
+						return val1.getUrl().compareTo(val2.getUrl());
+					}
 				}
 			}
 		});
@@ -79,7 +74,6 @@ public class Main {
 				topPageMap.put(ip, result.getUrl());
 			}
 		}
-
 		// ip - 初回アクセス日 - url(昇順)でソート
 		Collections.sort(accessEntries, new Comparator<Object>() {
 			public int compare(Object obj1, Object obj2) {
@@ -89,15 +83,17 @@ public class Main {
 				Result val2 = (Result) ent2.getValue();
 
 				int ip = val1.getIp().compareTo(val2.getIp());
-				int date = val1.getFirstAccessDate().compareTo(
-						val2.getFirstAccessDate());
 
 				if (ip != 0) {
 					return ip;
-				} else if (date != 0) {
-					return date;
 				} else {
-					return val1.getUrl().compareTo(val2.getUrl());
+					int date = val1.getFirstAccessDate().compareTo(
+							val2.getFirstAccessDate());
+					if (date != 0) {
+						return date;
+					} else {
+						return val1.getUrl().compareTo(val2.getUrl());
+					}
 				}
 			}
 		});
@@ -128,31 +124,32 @@ public class Main {
 				int val2 = ent2.getValue().getCount();
 
 				int cnt = val2 - val1;
-				int date = ent1.getValue().getFirstAccessDate()
-						.compareTo(ent2.getValue().getFirstAccessDate());
-				int ip = ent1.getValue().getIp()
-						.compareTo(ent2.getValue().getIp());
 
 				if (cnt != 0) {
 					return cnt;
-				} else if (date != 0) {
-					return date;
 				} else {
-					return ip;
+					int date = ent1.getValue().getFirstAccessDate()
+							.compareTo(ent2.getValue().getFirstAccessDate());
+					if (date != 0) {
+						return date;
+					} else {
+						return ent1.getValue().getIp()
+								.compareTo(ent2.getValue().getIp());
+					}
 				}
 			}
 		});
 
 		totalstopWatch.stop();
 		System.out.println("total:" + totalstopWatch.getTime());
-		//
-		// for (Entry<String, Result> entry : countEntries) {
-		// Result result = entry.getValue();
-		// SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		// System.out.println(result.getIp() + "," + result.getCount() + ","
-		// + sdf.format(result.getFirstAccessDate()) + ","
-		// + topPageMap.get(result.getIp()));
-		// }
+
+		for (Entry<String, Result> entry : countEntries) {
+			Result result = entry.getValue();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			System.out.println(result.getIp() + "," + result.getCount() + ","
+					+ sdf.format(result.getFirstAccessDate()) + ","
+					+ topPageMap.get(result.getIp()));
+		}
 
 	}
 }
