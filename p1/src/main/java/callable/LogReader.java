@@ -9,18 +9,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.time.StopWatch;
-
 import util.P1Util;
 import entity.Result;
 
 public class LogReader {
 
 	public static Map<String, Result> read(List<String> filenames,
-			List<String> filters) {
+			String[] filters) {
 
-		Map<String, Result> resultMap = new HashMap<>();
-		Map<String, Date> accessMap = new HashMap<>();
+		Map<String, Result> resultMap = new HashMap<>(15000);
+		Map<String, Date> accessMap = new HashMap<>(10000);
+		
+		filenames = P1Util.sortLogfiles(filenames);
 
 		for (String filename : filenames) {
 
@@ -29,7 +29,6 @@ public class LogReader {
 				String line;
 
 				while ((line = reader.readLine()) != null) {
-
 
 					int ipIndex = line.indexOf(P1Util.SPACE);
 					int dateStartIndex = ipIndex + 6;
@@ -46,7 +45,6 @@ public class LogReader {
 							urlStartIndex);
 					int urlEndIndexQuestion = line.indexOf(P1Util.QUESTION,
 							urlStartIndex);
-					
 
 					int urlEndIndex;
 					if (urlEndIndexQuestion < 0) {
@@ -56,20 +54,24 @@ public class LogReader {
 					} else {
 						urlEndIndex = urlEndIndexQuestion;
 					}
-					
 
 					String url = line.substring(urlStartIndex, urlEndIndex);
-//
-//					StopWatch watch = new StopWatch();
-//					watch.start();
+
 					if (P1Util.isFilterd(method, url, filters) == false) {
+						
 
 						String ip = line.substring(0, ipIndex);
 						Date lastAccessDate = accessMap.get(ip);
 
+						long start = System.currentTimeMillis();
 						Date accessDate = P1Util.parseTime(line.substring(
 								dateStartIndex, dateEndIndex));
 
+						long end = System.currentTimeMillis();
+						long time = end - start;
+						if(time > 0) {
+							System.out.println("time:" + time);
+						}
 						if (lastAccessDate == null
 								|| P1Util.checkAccessDate(lastAccessDate,
 										accessDate)) {
@@ -88,12 +90,10 @@ public class LogReader {
 							}
 							accessMap.put(ip, accessDate);
 						}
+
 					}
-					
-//					watch.stop();
-//					if(watch.getTime() > 0) {
-//						System.out.println(watch.getTime());
-//					}
+
+
 				}
 
 			} catch (IOException e) {

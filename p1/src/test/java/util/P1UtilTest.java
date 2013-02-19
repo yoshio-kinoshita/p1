@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang.time.StopWatch;
 import org.junit.Test;
 
 public class P1UtilTest {
@@ -50,7 +51,6 @@ public class P1UtilTest {
 		for (String s : EXTENSIONS) {
 			System.out.println(s);
 		}
-
 	}
 
 	@Test
@@ -77,13 +77,16 @@ public class P1UtilTest {
 
 	@Test
 	public void parseTime() {
-		System.out.println(P1Util.parseTime("01/Jan/2012:04:31:20"));
-		System.out.println(P1Util.parseTime("01/Feb/2012:04:31:20"));
-		System.out.println(P1Util.parseTime("01/Mar/2012:04:31:20"));
-		System.out.println(P1Util.parseTime("01/Apr/2012:04:31:20"));
-		System.out.println(P1Util.parseTime("01/Jun/2012:04:31:20"));
-		System.out.println(P1Util.parseTime("01/May/2012:04:31:20"));
-		System.out.println(P1Util.parseTime("02/May/2012:20:34:17"));
+
+		for (int y = 0; y < 100; y++) {
+			StopWatch watch = new StopWatch();
+			watch.start();
+			for (int i = 0; i < 1000000; i++) {
+				P1Util.parseTime("01/Jan/2012:04:31:20");
+			}
+			watch.stop();
+			System.out.println(watch.getTime());
+		}
 	}
 
 	@Test
@@ -98,7 +101,7 @@ public class P1UtilTest {
 
 		System.out.println("slash:" + lastindexslash + " colon:" + lastindex);
 
-		assertFalse(P1Util.isFilterd("GET", url, new ArrayList<String>()));
+		// assertFalse(P1Util.isFilterd("GET", url,
 
 	}
 }

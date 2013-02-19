@@ -10,14 +10,14 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-
-import org.apache.commons.lang.time.StopWatch;
+import java.util.Map;
 
 public class P1Util {
 	private static final String FILTER_BASE[] = { "GET", "HEAD", "POST" };
-	private static final String EXTENSIONS[] = { "CGI", "HTM", "PHP", "HTML", "cgi",
-			"htm", "html", "php" };
+	private static final String EXTENSIONS[] = { "CGI", "HTM", "PHP", "HTML",
+			"cgi", "htm", "html", "php" };
 
 	public static final String SPACE = " ";
 
@@ -42,6 +42,23 @@ public class P1Util {
 	private static final int MI_END_INDEX = MI_START_INDEX + 2;
 	private static final int SS_START_INDEX = MI_END_INDEX + 1;
 	private static final int SS_END_INDEX = SS_START_INDEX + 2;
+	
+	private static Map<String, Integer> convertMap = new HashMap<>();
+	
+	static {
+		convertMap.put("Jan", Integer.valueOf(0));
+		convertMap.put("Feb", Integer.valueOf(1));
+		convertMap.put("Mar", Integer.valueOf(2));
+		convertMap.put("Apr", Integer.valueOf(3));
+		convertMap.put("May", Integer.valueOf(4));
+		convertMap.put("Jun", Integer.valueOf(5));
+		convertMap.put("Jul", Integer.valueOf(6));
+		convertMap.put("Aug", Integer.valueOf(7));
+		convertMap.put("Sep", Integer.valueOf(8));
+		convertMap.put("Oct", Integer.valueOf(9));
+		convertMap.put("Nov", Integer.valueOf(10));
+		convertMap.put("Dec", Integer.valueOf(11));
+	}
 
 	private static Calendar c = Calendar.getInstance();
 
@@ -101,17 +118,6 @@ public class P1Util {
 
 		return c.getTime();
 
-	}
-
-	public static void showMem() {
-
-		int mb = 1024 * 1024;
-
-		long fm = Runtime.getRuntime().freeMemory();
-		long tm = Runtime.getRuntime().totalMemory();
-
-		System.out.println("total: " + tm / mb + " ; free: " + fm / mb
-				+ " ; used: " + (tm - fm) / mb);
 	}
 
 	public static boolean checkAccessDate(Date lastAccessDate, Date accessDate) {
@@ -188,10 +194,7 @@ public class P1Util {
 	 * @param filters
 	 * @return
 	 */
-	public static boolean isFilterd(String method, String url,
-			List<String> filters) {
-//		StopWatch watch = new StopWatch();
-//		watch.start();
+	public static boolean isFilterd(String method, String url, String[] filters) {
 		if (Arrays.binarySearch(FILTER_BASE, method) >= 0) {
 
 			String urlWithSlash = url;
@@ -199,8 +202,22 @@ public class P1Util {
 				urlWithSlash = urlWithSlash + SLASH;
 			}
 
-			for (String filter : filters) {
+			int lastindexslash = url.lastIndexOf(P1Util.SLASH);
+			if (lastindexslash < 0) {
+				return true;
+			}
 
+			url = url.substring(lastindexslash);
+			int lastindex = url.lastIndexOf(P1Util.COLON);
+
+			if (lastindex > 0) {
+				String extension = url.substring(lastindex + 1);
+				if (Arrays.binarySearch(EXTENSIONS, extension) < 0) {
+					return true;
+				}
+			}
+
+			for (String filter : filters) {
 				if (urlWithSlash.startsWith(filter)) {
 					return true;
 				} else {
@@ -208,44 +225,10 @@ public class P1Util {
 				}
 			}
 
-			int lastindexslash = url.lastIndexOf(P1Util.SLASH);
-			if (lastindexslash < 0) {
-//				watch.stop();
-//				if(watch.getTime() > 0) {
-//					System.out.println("a:" + watch.getTime());
-//				}
-				return true;
-			}
-			url = url.substring(lastindexslash);
-			int lastindex = url.lastIndexOf(P1Util.COLON);
-
-			if (lastindex > 0) {
-				String extension = url.substring(lastindex + 1);
-				if (Arrays.binarySearch(EXTENSIONS, extension) >= 0) {
-//					watch.stop();
-//					if(watch.getTime() > 0) {
-//						System.out.println("b:" + watch.getTime());
-//					}
-					return false;
-				} else {
-//					watch.stop();
-//					if(watch.getTime() > 0) {
-//						System.out.println("c:" + watch.getTime());
-//					}
-					return true;
-				}
-			}
 		} else {
-//			watch.stop();
-//			if(watch.getTime() > 0) {
-//				System.out.println("d:" + watch.getTime());
-//			}
+
 			return true;
 		}
-//		watch.stop();
-//		if(watch.getTime() > 0) {
-//			System.out.println("e:" + watch.getTime());
-//		}
 		return false;
 	}
 
