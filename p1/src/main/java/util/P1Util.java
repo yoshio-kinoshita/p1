@@ -22,7 +22,8 @@ public class P1Util {
 			.compile("[-_.!~*\\'()a-zA-Z0-9;\\/:\\@&=+\\$,%#]+");
 	public static final String FILTER_BASE = "GET|HEAD|POST";
 
-	public static final String EXTENSIONS[] = { "cgi", "htm", "html", "php" };
+	private static String EXTENSIONS[] = { "CGI", "HTM", "PHP", "HTML", "cgi",
+			"htm", "html", "php" };
 
 	public static final String SPACE = " ";
 
@@ -208,7 +209,11 @@ public class P1Util {
 				}
 			}
 
-			int lastindex = url.lastIndexOf(COLON);
+			int lastindexslash = url.lastIndexOf(P1Util.SLASH);
+
+			url = url.substring(lastindexslash);
+			int lastindex = url.lastIndexOf(P1Util.COLON);
+
 			if (lastindex > 0) {
 				String extension = url.substring(lastindex + 1);
 				if (Arrays.binarySearch(EXTENSIONS, extension) >= 0) {

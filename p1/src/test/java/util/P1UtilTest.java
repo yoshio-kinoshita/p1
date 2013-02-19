@@ -43,7 +43,8 @@ public class P1UtilTest {
 
 	@Test
 	public void arraySort() {
-		String EXTENSIONS[] = { "cgi", "php", "htm", "html", };
+		String EXTENSIONS[] = { "CGI", "HTM", "PHP", "HTML", "cgi", "htm",
+				"html", "php" };
 		Arrays.sort(EXTENSIONS);
 
 		for (String s : EXTENSIONS) {
@@ -88,5 +89,21 @@ public class P1UtilTest {
 		System.out.println(P1Util.parseTime("01/Jun/2012:04:31:20"));
 		System.out.println(P1Util.parseTime("01/May/2012:04:31:20"));
 		System.out.println(P1Util.parseTime("02/May/2012:20:34:17"));
+	}
+
+	@Test
+	public void isfilterd() {
+
+		String url = "/maeyes/event/seminar070724.htmll_autoriza.htmtmTES-070724.pdf-q5366827.htmlAA";
+
+		int lastindexslash = url.lastIndexOf(P1Util.SLASH);
+
+		url = url.substring(lastindexslash);
+		int lastindex = url.lastIndexOf(P1Util.COLON);
+
+		System.out.println("slash:" + lastindexslash + " colon:" + lastindex);
+
+		assertFalse(P1Util.isFilterd("GET", url, new ArrayList<String>()));
+
 	}
 }
