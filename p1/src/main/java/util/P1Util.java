@@ -46,7 +46,9 @@ public class P1Util {
 	public static final int METHOD_START_INDEX = 9;
 	public static final int METHOD_END_INDEX = 1;
 	public static final int ZERO = 0;
-	
+
+	private static Calendar c = Calendar.getInstance();
+
 	private static int convertMMMType(String value) {
 		switch (value) {
 		case "Jan":
@@ -84,7 +86,6 @@ public class P1Util {
 	 * @return
 	 */
 	public static Date parseTime(String accessDate) {
-		Calendar c = Calendar.getInstance();
 		int dd = Integer.parseInt(accessDate.substring(DD_START_INDEX,
 				DD_END_INDEX));
 		int mm = convertMMMType(accessDate.substring(MM_START_INDEX,
@@ -117,7 +118,6 @@ public class P1Util {
 	 * @return
 	 */
 	private static Date addSecond(Date date, int amount) {
-		Calendar c = Calendar.getInstance();
 
 		c.setTime(date);
 		c.set(Calendar.MILLISECOND, 0);
