@@ -13,8 +13,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.time.StopWatch;
-
 public class P1Util {
 	public static final Pattern IP = Pattern
 			.compile("\\d+\\.\\d+\\.\\d+\\.\\d+");
@@ -26,13 +24,13 @@ public class P1Util {
 
 	public static final String EXTENSIONS[] = { "cgi", "htm", "html", "php" };
 
-	public static String SPACE = " ";
+	public static final String SPACE = " ";
 
-	public static String MARK = "\"";
+	public static final String MARK = "\"";
 
-	public static String SLASH = "/";
+	public static final String SLASH = "/";
 
-	public static String COLON = ".";
+	public static final String COLON = ".";
 
 	private static final int DD_START_INDEX = 0;
 	private static final int DD_END_INDEX = DD_START_INDEX + 2;

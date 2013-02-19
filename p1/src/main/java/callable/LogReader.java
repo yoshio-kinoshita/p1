@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.time.StopWatch;
-
 import util.P1Util;
 import entity.Result;
 
@@ -28,8 +26,6 @@ public class LogReader {
 					new File(filename)))) {
 				String line;
 
-				StopWatch watch = new StopWatch();
-				watch.start();
 				while ((line = reader.readLine()) != null) {
 
 					int ipIndex = line.indexOf(P1Util.SPACE);
@@ -49,6 +45,7 @@ public class LogReader {
 					if (P1Util.isFilterd(method, url, filters) == false) {
 
 						String ip = line.substring(0, ipIndex);
+
 						Date lastAccessDate = accessMap.get(ip);
 
 						Date accessDate = P1Util.parseTime(line.substring(
@@ -57,7 +54,6 @@ public class LogReader {
 						if (lastAccessDate == null
 								|| P1Util.checkAccessDate(lastAccessDate,
 										accessDate)) {
-
 							String key = P1Util.key(ip, url);
 							Result result = resultMap.get(key);
 							if (result == null) {
@@ -71,14 +67,11 @@ public class LogReader {
 								result.setCount(result.getCount() + 1);
 								resultMap.put(key, result);
 							}
+							accessMap.put(ip, accessDate);
 						}
-						accessMap.put(ip, accessDate);
-
 					}
 				}
 
-				watch.stop();
-				System.out.println("1ファイル:" + watch.getTime());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

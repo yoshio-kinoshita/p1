@@ -48,7 +48,6 @@ public class Main {
 			}
 		}
 
-		System.out.println("-------------");
 
 		// ip - cnt - urlでソート
 		Collections.sort(resultEntries, new Comparator<Object>() {
