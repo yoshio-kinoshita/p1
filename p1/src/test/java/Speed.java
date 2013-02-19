@@ -33,11 +33,11 @@ public class Speed {
 	public void read() {
 
 		List<String> logfiles = new ArrayList<String>();
-		logfiles.add("src/test/resources/p1gp2_log1.txt");
-		logfiles.add("src/test/resources/p1gp2_log2.txt");
-		logfiles.add("src/test/resources/p1gp2_log3.txt");
-		logfiles.add("src/test/resources/p1gp2_log4.txt");
-		logfiles.add("src/test/resources/p1gp2_log5.txt");
+		logfiles.add("src/test/resources/p1gp-test-111.txt");
+		logfiles.add("src/test/resources/p1gp-test-112.txt");
+		logfiles.add("src/test/resources/p1gp-test-113.txt");
+		logfiles.add("src/test/resources/p1gp-test-114.txt");
+		logfiles.add("src/test/resources/p1gp-test-115.txt");
 
 		for (int i = 0; i < 10; i++) {
 			StopWatch watch = new StopWatch();
@@ -172,5 +172,70 @@ public class Speed {
 		default:
 			return "12";
 		}
+	}
+	
+	@Test
+	public void stringint() {
+		
+		String a = "1";
+		
+		StopWatch watch = new StopWatch();
+		watch.start();
+		for(int i = 0; i < 2000000; i++) {
+			int x = Integer.parseInt(a);
+			
+		}
+		
+		watch.stop();
+		System.out.println("parseint : " + watch.getTime());
+		
+		watch = new StopWatch();
+		watch.start();
+		for(int i = 0; i < 2000000; i++) {
+			int x = Integer.valueOf(a);
+		}
+		
+		watch.stop();
+		System.out.println("valueof : " + watch.getTime());
+		
+		watch = new StopWatch();
+		watch.start();
+		for(int i = 0; i < 2000000; i++) {
+			int x = new Integer(a);
+		}
+		
+		
+		watch.stop();
+		System.out.println("constractor : " + watch.getTime());
+		
+		System.out.println("------------");
+		
+		watch = new StopWatch();
+		watch.start();
+		for(int i = 0; i < 2000000; i++) {
+			byte x = Byte.parseByte(a);
+		}
+		
+		watch.stop();
+		System.out.println("parseint : " + watch.getTime());
+		
+		watch = new StopWatch();
+		watch.start();
+		for(int i = 0; i < 2000000; i++) {
+			byte x = Byte.valueOf(a);
+		}
+		
+		watch.stop();
+		System.out.println("valueof : " + watch.getTime());
+		
+		watch = new StopWatch();
+		watch.start();
+		for(int i = 0; i < 2000000; i++) {
+			byte x = new Byte(a);
+		}
+		
+		watch.stop();
+		System.out.println("constractor : " + watch.getTime());
+		
 	}
 }

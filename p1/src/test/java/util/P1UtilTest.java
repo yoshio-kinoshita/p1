@@ -76,11 +76,6 @@ public class P1UtilTest {
 	}
 
 	@Test
-	public void match() {
-		assertTrue("GET".matches(P1Util.FILTER_BASE));
-	}
-
-	@Test
 	public void parseTime() {
 		System.out.println(P1Util.parseTime("01/Jan/2012:04:31:20"));
 		System.out.println(P1Util.parseTime("01/Feb/2012:04:31:20"));

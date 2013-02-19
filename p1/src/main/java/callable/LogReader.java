@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.time.StopWatch;
+
 import util.P1Util;
 import entity.Result;
 
@@ -28,6 +30,7 @@ public class LogReader {
 
 				while ((line = reader.readLine()) != null) {
 
+
 					int ipIndex = line.indexOf(P1Util.SPACE);
 					int dateStartIndex = ipIndex + 6;
 					int dateEndIndex = dateStartIndex + 20;
@@ -43,6 +46,7 @@ public class LogReader {
 							urlStartIndex);
 					int urlEndIndexQuestion = line.indexOf(P1Util.QUESTION,
 							urlStartIndex);
+					
 
 					int urlEndIndex;
 					if (urlEndIndexQuestion < 0) {
@@ -52,13 +56,15 @@ public class LogReader {
 					} else {
 						urlEndIndex = urlEndIndexQuestion;
 					}
+					
 
 					String url = line.substring(urlStartIndex, urlEndIndex);
-
+//
+//					StopWatch watch = new StopWatch();
+//					watch.start();
 					if (P1Util.isFilterd(method, url, filters) == false) {
 
 						String ip = line.substring(0, ipIndex);
-
 						Date lastAccessDate = accessMap.get(ip);
 
 						Date accessDate = P1Util.parseTime(line.substring(
@@ -83,13 +89,17 @@ public class LogReader {
 							accessMap.put(ip, accessDate);
 						}
 					}
+					
+//					watch.stop();
+//					if(watch.getTime() > 0) {
+//						System.out.println(watch.getTime());
+//					}
 				}
 
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-
 		return resultMap;
 	}
 }

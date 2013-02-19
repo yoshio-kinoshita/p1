@@ -11,18 +11,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Pattern;
+
+import org.apache.commons.lang.time.StopWatch;
 
 public class P1Util {
-	public static final Pattern IP = Pattern
-			.compile("\\d+\\.\\d+\\.\\d+\\.\\d+");
-	public static final Pattern TIME = Pattern
-			.compile("\\d+\\/[A-Z][a-z]{2}\\/\\d+:\\d+:\\d+:\\d+");
-	public static final Pattern URL = Pattern
-			.compile("[-_.!~*\\'()a-zA-Z0-9;\\/:\\@&=+\\$,%#]+");
-	public static final String FILTER_BASE = "GET|HEAD|POST";
-
-	private static String EXTENSIONS[] = { "CGI", "HTM", "PHP", "HTML", "cgi",
+	private static final String FILTER_BASE[] = { "GET", "HEAD", "POST" };
+	private static final String EXTENSIONS[] = { "CGI", "HTM", "PHP", "HTML", "cgi",
 			"htm", "html", "php" };
 
 	public static final String SPACE = " ";
@@ -48,6 +42,8 @@ public class P1Util {
 	private static final int MI_END_INDEX = MI_START_INDEX + 2;
 	private static final int SS_START_INDEX = MI_END_INDEX + 1;
 	private static final int SS_END_INDEX = SS_START_INDEX + 2;
+
+	private static Calendar c = Calendar.getInstance();
 
 	private static int convertMMMType(String value) {
 		switch (value) {
@@ -86,15 +82,18 @@ public class P1Util {
 	 * @return
 	 */
 	public static Date parseTime(String accessDate) {
-		Calendar c = Calendar.getInstance();
-
-		String dd = accessDate.substring(DD_START_INDEX, DD_END_INDEX);
+		int dd = Integer.valueOf(accessDate.substring(DD_START_INDEX,
+				DD_END_INDEX));
 		int mm = convertMMMType(accessDate.substring(MM_START_INDEX,
 				MM_END_INDEX));
-		String yyyy = accessDate.substring(YYYY_START_INDEX, YYYY_END_INDEX);
-		String hh = accessDate.substring(HH_START_INDEX, HH_END_INDEX);
-		String mi = accessDate.substring(MI_START_INDEX, MI_END_INDEX);
-		String ss = accessDate.substring(SS_START_INDEX, SS_END_INDEX);
+		int yyyy = Integer.valueOf(accessDate.substring(YYYY_START_INDEX,
+				YYYY_END_INDEX));
+		int hh = Integer.valueOf(accessDate.substring(HH_START_INDEX,
+				HH_END_INDEX));
+		int mi = Integer.valueOf(accessDate.substring(MI_START_INDEX,
+				MI_END_INDEX));
+		int ss = Integer.valueOf(accessDate.substring(SS_START_INDEX,
+				SS_END_INDEX));
 
 		c.set(Integer.valueOf(yyyy), mm, Integer.valueOf(dd),
 				Integer.valueOf(hh), Integer.valueOf(mi), Integer.valueOf(ss));
@@ -127,7 +126,6 @@ public class P1Util {
 	 * @return
 	 */
 	private static Date addSecond(Date date, int amount) {
-		Calendar c = Calendar.getInstance();
 		c.setTime(date);
 		c.set(Calendar.MILLISECOND, 0);
 		c.add(Calendar.SECOND, amount);
@@ -192,8 +190,9 @@ public class P1Util {
 	 */
 	public static boolean isFilterd(String method, String url,
 			List<String> filters) {
-
-		if (method.matches(FILTER_BASE)) {
+//		StopWatch watch = new StopWatch();
+//		watch.start();
+		if (Arrays.binarySearch(FILTER_BASE, method) >= 0) {
 
 			String urlWithSlash = url;
 			if (!urlWithSlash.endsWith(SLASH)) {
@@ -210,21 +209,43 @@ public class P1Util {
 			}
 
 			int lastindexslash = url.lastIndexOf(P1Util.SLASH);
-
+			if (lastindexslash < 0) {
+//				watch.stop();
+//				if(watch.getTime() > 0) {
+//					System.out.println("a:" + watch.getTime());
+//				}
+				return true;
+			}
 			url = url.substring(lastindexslash);
 			int lastindex = url.lastIndexOf(P1Util.COLON);
 
 			if (lastindex > 0) {
 				String extension = url.substring(lastindex + 1);
 				if (Arrays.binarySearch(EXTENSIONS, extension) >= 0) {
+//					watch.stop();
+//					if(watch.getTime() > 0) {
+//						System.out.println("b:" + watch.getTime());
+//					}
 					return false;
 				} else {
+//					watch.stop();
+//					if(watch.getTime() > 0) {
+//						System.out.println("c:" + watch.getTime());
+//					}
 					return true;
 				}
 			}
 		} else {
+//			watch.stop();
+//			if(watch.getTime() > 0) {
+//				System.out.println("d:" + watch.getTime());
+//			}
 			return true;
 		}
+//		watch.stop();
+//		if(watch.getTime() > 0) {
+//			System.out.println("e:" + watch.getTime());
+//		}
 		return false;
 	}
 
