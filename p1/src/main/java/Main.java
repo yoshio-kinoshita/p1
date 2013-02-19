@@ -39,8 +39,12 @@ public class Main {
 		List<String> filters = new ArrayList<>();
 		// filters.add("/webmail/");
 
+		StopWatch watch = new StopWatch();
+		watch.start();
 		Map<String, Result> resultMap = LogReader.read(logfiles,
 				filters.toArray(new String[0]));
+		watch.stop();
+		System.out.println(watch.getTime());
 
 		List<Entry<String, Result>> accessEntries = new ArrayList<>(
 				resultMap.entrySet());
@@ -70,14 +74,14 @@ public class Main {
 
 		totalstopWatch.stop();
 		System.out.println("total:" + totalstopWatch.getTime());
-
-		for (Entry<String, Result> entry : countEntries) {
-			Result result = entry.getValue();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-			System.out.println(result.getIp() + "," + result.getCount() + ","
-					+ sdf.format(result.getFirstAccessDate()) + ","
-					+ topPageMap.get(result.getIp()));
-		}
+		//
+		// for (Entry<String, Result> entry : countEntries) {
+		// Result result = entry.getValue();
+		// SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		// System.out.println(result.getIp() + "," + result.getCount() + ","
+		// + sdf.format(result.getFirstAccessDate()) + ","
+		// + topPageMap.get(result.getIp()));
+		// }
 
 	}
 }
