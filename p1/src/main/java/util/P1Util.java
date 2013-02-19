@@ -26,11 +26,14 @@ public class P1Util {
 
 	public static final String SPACE = " ";
 
+	public static final String QUESTION = "?";
+
 	public static final String MARK = "\"";
 
 	public static final String SLASH = "/";
 
 	public static final String COLON = ".";
+	public static final String SEMI_COLON = ":";
 
 	private static final int DD_START_INDEX = 0;
 	private static final int DD_END_INDEX = DD_START_INDEX + 2;
@@ -48,29 +51,29 @@ public class P1Util {
 	private static int convertMMMType(String value) {
 		switch (value) {
 		case "Jan":
-			return 1;
+			return 0;
 		case "Feb":
-			return 2;
+			return 1;
 		case "Mar":
-			return 3;
+			return 2;
 		case "Apr":
-			return 4;
+			return 3;
 		case "May":
-			return 5;
+			return 4;
 		case "Jun":
-			return 6;
+			return 5;
 		case "Jul":
-			return 7;
+			return 6;
 		case "Aug":
-			return 8;
+			return 7;
 		case "Sep":
-			return 9;
+			return 8;
 		case "Oct":
-			return 10;
+			return 9;
 		case "Nov":
-			return 11;
+			return 10;
 		default:
-			return 12;
+			return 11;
 		}
 	}
 
@@ -92,12 +95,9 @@ public class P1Util {
 		String mi = accessDate.substring(MI_START_INDEX, MI_END_INDEX);
 		String ss = accessDate.substring(SS_START_INDEX, SS_END_INDEX);
 
-		c.set(Calendar.YEAR, Integer.valueOf(yyyy));
-		c.set(Calendar.MONTH, mm - 1);
-		c.set(Calendar.DATE, Integer.valueOf(dd));
-		c.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hh));
-		c.set(Calendar.MINUTE, Integer.valueOf(mi));
-		c.set(Calendar.SECOND, Integer.valueOf(ss));
+		c.set(Integer.valueOf(yyyy), mm, Integer.valueOf(dd),
+				Integer.valueOf(hh), Integer.valueOf(mi), Integer.valueOf(ss));
+		c.set(Calendar.MILLISECOND, 0);
 
 		return c.getTime();
 
@@ -128,6 +128,7 @@ public class P1Util {
 	private static Date addSecond(Date date, int amount) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
+		c.set(Calendar.MILLISECOND, 0);
 		c.add(Calendar.SECOND, amount);
 		return c.getTime();
 	}

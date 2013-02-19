@@ -39,7 +39,20 @@ public class LogReader {
 							methodEndIndex);
 
 					int urlStartIndex = methodEndIndex + 1;
-					int urlEndIndex = line.indexOf(P1Util.SPACE, urlStartIndex);
+					int urlEndIndexSpace = line.indexOf(P1Util.SPACE,
+							urlStartIndex);
+					int urlEndIndexQuestion = line.indexOf(P1Util.QUESTION,
+							urlStartIndex);
+
+					int urlEndIndex;
+					if (urlEndIndexQuestion < 0) {
+						urlEndIndex = urlEndIndexSpace;
+					} else if (urlEndIndexQuestion > urlEndIndexSpace) {
+						urlEndIndex = urlEndIndexSpace;
+					} else {
+						urlEndIndex = urlEndIndexQuestion;
+					}
+
 					String url = line.substring(urlStartIndex, urlEndIndex);
 
 					if (P1Util.isFilterd(method, url, filters) == false) {

@@ -8,6 +8,8 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang.time.StopWatch;
 
+import util.P1Util;
+
 import entity.Result;
 
 public class Main {
@@ -38,18 +40,7 @@ public class Main {
 		List<Entry<String, Result>> resultEntries = new ArrayList<>(
 				resultMap.entrySet());
 
-		for (Entry<String, Result> entry : resultEntries) {
-			Result result = entry.getValue();
-			if (result.getIp().equals("60.32.3.172")) {
-				System.out.println(result.getIp() + "," + result.getCount()
-						+ "," + result.getFirstAccessDate() + ","
-						+ result.getUrl());
-
-			}
-		}
-
-
-		// ip - cnt - urlでソート
+		// ip - cnt(降順) - url(昇順)でソート
 		Collections.sort(resultEntries, new Comparator<Object>() {
 			public int compare(Object obj1, Object obj2) {
 				Map.Entry<String, Result> ent1 = (Map.Entry<String, Result>) obj1;
@@ -58,14 +49,14 @@ public class Main {
 				Result val2 = (Result) ent2.getValue();
 
 				int ip = val1.getIp().compareTo(val2.getIp());
-				int cnt = val1.getCount() - val2.getCount();
+				int cnt = val2.getCount() - val1.getCount();
 
 				if (ip != 0) {
 					return ip;
 				} else if (cnt != 0) {
-					return -1 * cnt;
+					return cnt;
 				} else {
-					return val1.getUrl().compareTo(val1.getUrl());
+					return val1.getUrl().compareTo(val2.getUrl());
 				}
 			}
 		});
@@ -91,13 +82,13 @@ public class Main {
 			public int compare(Object obj1, Object obj2) {
 				Map.Entry<String, Result> ent1 = (Map.Entry<String, Result>) obj1;
 				Map.Entry<String, Result> ent2 = (Map.Entry<String, Result>) obj2;
-				Integer val1 = (Integer) ent1.getValue().getCount();
-				Integer val2 = (Integer) ent2.getValue().getCount();
+				int val1 = ent1.getValue().getCount();
+				int val2 = ent2.getValue().getCount();
 
-				int cnt = val1.compareTo(val2);
+				int cnt = val2 - val1;
 
 				if (cnt != 0) {
-					return -1 * cnt;
+					return cnt;
 				} else {
 					return ent1.getValue().getFirstAccessDate()
 							.compareTo(ent2.getValue().getFirstAccessDate());
