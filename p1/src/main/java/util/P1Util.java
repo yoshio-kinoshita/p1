@@ -118,7 +118,6 @@ public class P1Util {
 	 * @return
 	 */
 	private static Date addSecond(Date date, int amount) {
-
 		c.setTime(date);
 		c.set(Calendar.MILLISECOND, 0);
 		c.add(Calendar.SECOND, amount);
