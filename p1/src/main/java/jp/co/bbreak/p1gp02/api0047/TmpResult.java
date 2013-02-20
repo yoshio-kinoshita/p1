@@ -1,8 +1,8 @@
-package entity;
+package jp.co.bbreak.p1gp02.api0047;
 
 import java.util.Date;
 
-public class Result {
+public class TmpResult {
 
 	private String ip;
 	private String url;

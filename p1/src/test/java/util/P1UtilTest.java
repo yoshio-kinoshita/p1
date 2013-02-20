@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import jp.co.bbreak.p1gp02.api0047.P1Util;
+
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang.time.StopWatch;
 import org.junit.Test;
@@ -51,28 +53,6 @@ public class P1UtilTest {
 		for (String s : EXTENSIONS) {
 			System.out.println(s);
 		}
-	}
-
-	@Test
-	public void sortLogfiles() throws NoSuchMethodException, SecurityException,
-			IllegalAccessException, IllegalArgumentException,
-			InvocationTargetException {
-
-		List<String> logfiles = new ArrayList<String>();
-		logfiles.add("src/test/resources/p1gp2_log5.txt");
-		logfiles.add("src/test/resources/p1gp2_log4.txt");
-		logfiles.add("src/test/resources/p1gp2_log3.txt");
-		logfiles.add("src/test/resources/p1gp2_log2.txt");
-		logfiles.add("src/test/resources/p1gp2_log1.txt");
-
-		logfiles = P1Util.sortLogfiles(logfiles);
-
-		assertEquals(logfiles.get(0), "src/test/resources/p1gp2_log1.txt");
-		assertEquals(logfiles.get(1), "src/test/resources/p1gp2_log2.txt");
-		assertEquals(logfiles.get(2), "src/test/resources/p1gp2_log3.txt");
-		assertEquals(logfiles.get(3), "src/test/resources/p1gp2_log4.txt");
-		assertEquals(logfiles.get(4), "src/test/resources/p1gp2_log5.txt");
-
 	}
 
 	@Test

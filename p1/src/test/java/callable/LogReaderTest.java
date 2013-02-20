@@ -1,10 +1,10 @@
 package callable;
 
 import static org.junit.Assert.*;
+import jp.co.bbreak.p1gp02.api0047.P1Util;
 
 import org.junit.Test;
 
-import util.P1Util;
 
 public class LogReaderTest {
 

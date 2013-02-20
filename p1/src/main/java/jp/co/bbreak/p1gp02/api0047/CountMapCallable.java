@@ -1,4 +1,4 @@
-package callable;
+package jp.co.bbreak.p1gp02.api0047;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,26 +9,25 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 
-import entity.Result;
 
-public class CountMapCallable implements Callable<List<Entry<String, Result>>> {
+public class CountMapCallable implements Callable<List<Entry<String, TmpResult>>> {
 
-	private List<Entry<String, Result>> accessEntries;
+	private List<Entry<String, TmpResult>> accessEntries;
 
-	public CountMapCallable(List<Entry<String, Result>> accessEntries) {
+	public CountMapCallable(List<Entry<String, TmpResult>> accessEntries) {
 		this.accessEntries = accessEntries;
 	}
 
 	@Override
-	public List<Entry<String, Result>> call() throws Exception {
+	public List<Entry<String, TmpResult>> call() throws Exception {
 
 		// ip - 初回アクセス日 - url(昇順)でソート
 		Collections.sort(accessEntries, new Comparator<Object>() {
 			public int compare(Object obj1, Object obj2) {
-				Map.Entry<String, Result> ent1 = (Map.Entry<String, Result>) obj1;
-				Map.Entry<String, Result> ent2 = (Map.Entry<String, Result>) obj2;
-				Result val1 = (Result) ent1.getValue();
-				Result val2 = (Result) ent2.getValue();
+				Map.Entry<String, TmpResult> ent1 = (Map.Entry<String, TmpResult>) obj1;
+				Map.Entry<String, TmpResult> ent2 = (Map.Entry<String, TmpResult>) obj2;
+				TmpResult val1 = (TmpResult) ent1.getValue();
+				TmpResult val2 = (TmpResult) ent2.getValue();
 
 				int ip = val1.getIp().compareTo(val2.getIp());
 
@@ -47,11 +46,11 @@ public class CountMapCallable implements Callable<List<Entry<String, Result>>> {
 		});
 
 		// ipアドレスごとにカウントmap生成
-		Map<String, Result> countMap = new HashMap<>();
-		for (Entry<String, Result> entries : accessEntries) {
-			Result result = entries.getValue();
+		Map<String, TmpResult> countMap = new HashMap<>();
+		for (Entry<String, TmpResult> entries : accessEntries) {
+			TmpResult result = entries.getValue();
 			String ip = result.getIp();
-			Result countResult = countMap.get(ip);
+			TmpResult countResult = countMap.get(ip);
 			if (countResult == null) {
 				countResult = result;
 			} else {
@@ -62,12 +61,12 @@ public class CountMapCallable implements Callable<List<Entry<String, Result>>> {
 		}
 
 		// cnt(降順) - アクセス日(昇順) - ip(昇順) でソート
-		List<Entry<String, Result>> countEntries = new ArrayList<>(
+		List<Entry<String, TmpResult>> countEntries = new ArrayList<>(
 				countMap.entrySet());
 		Collections.sort(countEntries, new Comparator<Object>() {
 			public int compare(Object obj1, Object obj2) {
-				Map.Entry<String, Result> ent1 = (Map.Entry<String, Result>) obj1;
-				Map.Entry<String, Result> ent2 = (Map.Entry<String, Result>) obj2;
+				Map.Entry<String, TmpResult> ent1 = (Map.Entry<String, TmpResult>) obj1;
+				Map.Entry<String, TmpResult> ent2 = (Map.Entry<String, TmpResult>) obj2;
 				int val1 = ent1.getValue().getCount();
 				int val2 = ent2.getValue().getCount();
 

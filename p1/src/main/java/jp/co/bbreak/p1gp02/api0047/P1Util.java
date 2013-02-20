@@ -1,4 +1,4 @@
-package util;
+package jp.co.bbreak.p1gp02.api0047;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -128,12 +128,12 @@ public class P1Util {
 		return ip + url;
 	}
 
-	public static List<String> sortLogfiles(List<String> logfiles) {
+	public static List<File> sortLogfiles(List<File> logfiles) {
 
 		List<Object[]> list = new ArrayList<>();
-		for (String logfile : logfiles) {
+		for (File logfile : logfiles) {
 			try (BufferedReader reader = new BufferedReader(new FileReader(
-					new File(logfile)))) {
+					logfile))) {
 
 				String line = reader.readLine();
 
@@ -150,9 +150,9 @@ public class P1Util {
 
 		Collections.sort(list, new FileComparator());
 
-		List<String> sorted = new ArrayList<>();
+		List<File> sorted = new ArrayList<>();
 		for (Object[] o : list) {
-			sorted.add((String) o[1]);
+			sorted.add((File) o[1]);
 		}
 
 		return sorted;

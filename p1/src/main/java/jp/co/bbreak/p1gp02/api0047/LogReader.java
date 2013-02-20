@@ -1,4 +1,4 @@
-package callable;
+package jp.co.bbreak.p1gp02.api0047;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,23 +9,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import util.P1Util;
-import entity.Result;
 
-public class LogReader{
+public class LogReader {
 
-	public static Map<String, Result> read(List<String> filenames,
-			String[] filters) {
+	public static Map<String, TmpResult> read(List<File> files, String[] filters) {
 
-		Map<String, Result> resultMap = new HashMap<>();
+		Map<String, TmpResult> resultMap = new HashMap<>();
 		Map<String, Date> accessMap = new HashMap<>();
 
-		filenames = P1Util.sortLogfiles(filenames);
+		files = P1Util.sortLogfiles(files);
 
-		for (String filename : filenames) {
+		for (File file : files) {
 
-			try (BufferedReader reader = new BufferedReader(new FileReader(
-					new File(filename)))) {
+			try (BufferedReader reader = new BufferedReader(
+					new FileReader(file))) {
 				String line;
 
 				while ((line = reader.readLine()) != null) {
@@ -71,9 +68,9 @@ public class LogReader{
 								|| P1Util.checkAccessDate(lastAccessDate,
 										accessDate)) {
 							String key = P1Util.key(ip, url);
-							Result result = resultMap.get(key);
+							TmpResult result = resultMap.get(key);
 							if (result == null) {
-								result = new Result();
+								result = new TmpResult();
 								result.setIp(ip);
 								result.setUrl(url);
 								result.setFirstAccessDate(accessDate);

@@ -1,4 +1,4 @@
-package callable;
+package jp.co.bbreak.p1gp02.api0047;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,13 +8,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 
-import entity.Result;
 
 public class ToppageCallable implements Callable<Map<String, String> >{
 	
-	private List<Entry<String, Result>> accessEntries;
+	private List<Entry<String, TmpResult>> accessEntries;
 
-	public ToppageCallable(List<Entry<String, Result>> accessEntries) {
+	public ToppageCallable(List<Entry<String, TmpResult>> accessEntries) {
 		this.accessEntries = accessEntries;
 	}
 
@@ -25,10 +24,10 @@ public class ToppageCallable implements Callable<Map<String, String> >{
 		// ip - cnt(降順) - url(昇順)でソート
 		Collections.sort(accessEntries, new Comparator<Object>() {
 			public int compare(Object obj1, Object obj2) {
-				Map.Entry<String, Result> ent1 = (Map.Entry<String, Result>) obj1;
-				Map.Entry<String, Result> ent2 = (Map.Entry<String, Result>) obj2;
-				Result val1 = (Result) ent1.getValue();
-				Result val2 = (Result) ent2.getValue();
+				Map.Entry<String, TmpResult> ent1 = (Map.Entry<String, TmpResult>) obj1;
+				Map.Entry<String, TmpResult> ent2 = (Map.Entry<String, TmpResult>) obj2;
+				TmpResult val1 = (TmpResult) ent1.getValue();
+				TmpResult val2 = (TmpResult) ent2.getValue();
 
 				int ip = val1.getIp().compareTo(val2.getIp());
 
@@ -47,8 +46,8 @@ public class ToppageCallable implements Callable<Map<String, String> >{
 
 		// ipアドレスごとにトップページmap生成
 		Map<String, String> topPageMap = new HashMap<>();
-		for (Entry<String, Result> entries : accessEntries) {
-			Result result = entries.getValue();
+		for (Entry<String, TmpResult> entries : accessEntries) {
+			TmpResult result = entries.getValue();
 			String ip = result.getIp();
 			String toppage = topPageMap.get(ip);
 			if (toppage == null) {

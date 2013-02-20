@@ -1,4 +1,4 @@
-package callable;
+package jp.co.bbreak.p1gp02.api0047;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,10 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import util.P1Util;
-import entity.Result;
 
-public class LogReaderCallable implements Callable<Map<String, Result>> {
+public class LogReaderCallable implements Callable<Map<String, TmpResult>> {
 
 	private String filename;
 	private String[] filters;
@@ -25,8 +23,8 @@ public class LogReaderCallable implements Callable<Map<String, Result>> {
 	}
 
 	@Override
-	public Map<String, Result> call() throws Exception {
-		Map<String, Result> resultMap = new HashMap<>();
+	public Map<String, TmpResult> call() throws Exception {
+		Map<String, TmpResult> resultMap = new HashMap<>();
 		Map<String, Date> accessMap = new HashMap<>();
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(
@@ -74,9 +72,9 @@ public class LogReaderCallable implements Callable<Map<String, Result>> {
 							|| P1Util.checkAccessDate(lastAccessDate,
 									accessDate)) {
 						String key = P1Util.key(ip, url);
-						Result result = resultMap.get(key);
+						TmpResult result = resultMap.get(key);
 						if (result == null) {
-							result = new Result();
+							result = new TmpResult();
 							result.setIp(ip);
 							result.setUrl(url);
 							if (accessDate == null) {
