@@ -5,17 +5,16 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
-
 
 public class LogReader {
 
-	public static Map<String, TmpResult> read(List<File> files, String[] filters) {
+	public static Hashtable<String, Object[]> read(List<File> files,
+			String[] filters) {
 
-		Map<String, TmpResult> resultMap = new HashMap<>();
-		Map<String, Date> accessMap = new HashMap<>();
+		Hashtable<String, Object[]> resultMap = new Hashtable<>();
+		Hashtable<String, Date> accessMap = new Hashtable<>();
 
 		files = P1Util.sortLogfiles(files);
 
@@ -68,16 +67,17 @@ public class LogReader {
 								|| P1Util.checkAccessDate(lastAccessDate,
 										accessDate)) {
 							String key = P1Util.key(ip, url);
-							TmpResult result = resultMap.get(key);
+							Object[] result = resultMap.get(key);
 							if (result == null) {
-								result = new TmpResult();
-								result.setIp(ip);
-								result.setUrl(url);
-								result.setFirstAccessDate(accessDate);
-								result.setCount(1);
+								result = new Object[4];
+								result[0] = ip;
+								result[1] = url;
+								result[2] = accessDate;
+								result[3] = 1;
 								resultMap.put(key, result);
 							} else {
-								result.setCount(result.getCount() + 1);
+								result[3] = Integer.valueOf(result[3]
+										.toString()) + 1;
 								resultMap.put(key, result);
 							}
 							accessMap.put(ip, accessDate);

@@ -1,9 +1,10 @@
 package jp.co.bbreak.p1gp02.api0047;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.lang.time.StopWatch;
 
 import jp.co.bbreak.p1gp02.application.Result;
 
@@ -27,7 +28,12 @@ public class Trigger {
 		// filters.add("/webmail/");
 
 		for (int i = 0; i < 1; i++) {
+			StopWatch watch = new StopWatch();
+			watch.start();
 			List<Result> l = Job.start(logfiles, filters);
+			watch.stop();
+			System.out.println(watch.getTime());
+			
 		}
 	}
 }

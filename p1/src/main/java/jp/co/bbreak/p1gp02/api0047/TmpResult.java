@@ -8,8 +8,6 @@ public class TmpResult {
 	private String url;
 	private int count;
 	private Date firstAccessDate;
-	private Date lastAccessDate;
-	private int fileNo;
 
 	public Date getFirstAccessDate() {
 		return firstAccessDate;
@@ -45,22 +43,6 @@ public class TmpResult {
 
 	public void setCount(int count) {
 		this.count = count;
-	}
-
-	public Date getLastAccessDate() {
-		return lastAccessDate;
-	}
-
-	public void setLastAccessDate(Date lastAccessDate) {
-		this.lastAccessDate = lastAccessDate;
-	}
-
-	public int getFileNo() {
-		return fileNo;
-	}
-
-	public void setFileNo(int fileNo) {
-		this.fileNo = fileNo;
 	}
 
 }

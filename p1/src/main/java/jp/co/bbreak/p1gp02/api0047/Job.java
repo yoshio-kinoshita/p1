@@ -2,6 +2,7 @@ package jp.co.bbreak.p1gp02.api0047;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -16,11 +17,10 @@ public class Job {
 
 	public static List<Result> start(List<File> logfiles, List<String> filters) {
 		
-		Map<String, TmpResult> resultMap = LogReader.read(logfiles,
+		Map<String, Object[]> resultMap = LogReader.read(logfiles,
 				filters.toArray(new String[0]));
 
-		List<Entry<String, TmpResult>> accessEntries = new ArrayList<>(
-				resultMap.entrySet());
+		List<Map<String, Object[]>> accessEntries = Arrays.asList(resultMap);
 
 		ExecutorService e1 = Executors.newSingleThreadExecutor();
 		ToppageCallable task1 = new ToppageCallable(accessEntries);

@@ -3,14 +3,14 @@ package jp.co.bbreak.p1gp02.api0047;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 
+public class ToppageCallable implements Callable<List<Map<String, Object[]>>> {
 
-public class ToppageCallable implements Callable<Map<String, String> >{
-	
 	private List<Entry<String, TmpResult>> accessEntries;
 
 	public ToppageCallable(List<Entry<String, TmpResult>> accessEntries) {
@@ -18,7 +18,7 @@ public class ToppageCallable implements Callable<Map<String, String> >{
 	}
 
 	@Override
-	public Map<String, String>  call() throws Exception {
+	public Hashtable<String, String> call() throws Exception {
 		// トップページ設定
 
 		// ip - cnt(降順) - url(昇順)でソート
@@ -45,7 +45,7 @@ public class ToppageCallable implements Callable<Map<String, String> >{
 		});
 
 		// ipアドレスごとにトップページmap生成
-		Map<String, String> topPageMap = new HashMap<>();
+		Hashtable<String, String> topPageMap = new Hashtable<>();
 		for (Entry<String, TmpResult> entries : accessEntries) {
 			TmpResult result = entries.getValue();
 			String ip = result.getIp();
@@ -54,7 +54,7 @@ public class ToppageCallable implements Callable<Map<String, String> >{
 				topPageMap.put(ip, result.getUrl());
 			}
 		}
-		
+
 		return topPageMap;
 	}
 
