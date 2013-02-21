@@ -145,11 +145,10 @@ public class Job {
 			}
 
 			i++;
-			// SimpleDateFormat sdf = new
-			// SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-			// System.out.println(tmpResult.getIp() + "," + tmpResult.getCount()
-			// + "," + sdf.format(tmpResult.getFirstAccessDate()) + ","
-			// + topPageMap.get(tmpResult.getIp()));
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			System.out.println(tmpResult.getIp() + "," + tmpResult.getCount()
+					+ "," + sdf.format(tmpResult.getFirstAccessDate()) + ","
+					+ topPageMap.get(tmpResult.getIp()));
 
 		}
 		return resultList;
