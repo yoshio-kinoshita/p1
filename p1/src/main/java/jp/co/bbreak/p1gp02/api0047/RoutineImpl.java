@@ -9,16 +9,14 @@ import jp.co.bbreak.p1gp02.application.Routine;
 public class RoutineImpl implements Routine{
 
 	@Override
-	public List<Result> analyze(List<File> arg0, List<String> arg1)
+	public List<Result> analyze(List<File> files, List<String> filters)
 			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return Job.start(files, filters);
 	}
 
 	@Override
 	public String getUserName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "木下喜雄";
 	}
 
 }

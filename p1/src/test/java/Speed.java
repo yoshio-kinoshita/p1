@@ -5,10 +5,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.co.bbreak.p1gp02.api0047.P1Util;
+
 import org.apache.commons.lang.time.StopWatch;
 import org.junit.Test;
 
-import util.P1Util;
 
 public class Speed {
 
